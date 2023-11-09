@@ -15,10 +15,13 @@ namespace ONeilloGame
     public partial class ONeilloGame : Form
     {
         private GameBoardControl gameBoardControl;
+
         public ONeilloGame()
         {
             InitializeComponent();
+
             gameBoardControl = new GameBoardControl();
+
             this.Controls.Add(gameBoardControl);
         }
 
@@ -47,19 +50,19 @@ namespace ONeilloGame
 
         }
 
-        private void label1PlayerOneTurn_Click(object sender, EventArgs e)
-        {
-            //if (playerColour == 0)
-            //{
-            //    labelPlayerOneTurn.Show();
-            //    label2PlayerTwoTurn.Hide();
-            //}
-            //else if (playerColour == 1)
-            //{
-            //    label2PlayerTwoTurn.Show();
-            //    labelPlayerOneTurn.Hide();
-            //}
-        }
+        //private void label1PlayerOneTurn_Click(object sender, EventArgs e)
+        //{
+        //    if (playerColour == 0)
+        //    {
+        //        labelPlayerOneTurn.Show();
+        //        label2PlayerTwoTurn.Hide();
+        //    }
+        //    else if (playerColour == 1)
+        //    {
+        //        label2PlayerTwoTurn.Show();
+        //        labelPlayerOneTurn.Hide();
+        //    }
+        //}
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -68,6 +71,13 @@ namespace ONeilloGame
 
             // Show the aboutForm as a dialog (modal) window
             aboutForm.ShowDialog();
+        }
+
+        private void startGameBtn_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Let's go! The game has started.");
+            textBoxPlayer1.Enabled = false;
+            textBoxPlayer2.Enabled = false;
         }
     }
 }

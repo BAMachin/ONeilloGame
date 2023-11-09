@@ -44,8 +44,11 @@
             textBoxPlayer1 = new TextBox();
             pictureBox2 = new PictureBox();
             pictureBox3 = new PictureBox();
-            label1PlayerOneTurn = new Label();
             label2PlayerTwoTurn = new Label();
+            player1Counter = new Label();
+            player2Counter = new Label();
+            startGameBtn = new Button();
+            label1Player1Turn = new Label();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
@@ -126,7 +129,7 @@
             // aboutToolStripMenuItem
             // 
             aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            aboutToolStripMenuItem.Size = new Size(107, 22);
+            aboutToolStripMenuItem.Size = new Size(180, 22);
             aboutToolStripMenuItem.Text = "About";
             aboutToolStripMenuItem.Click += aboutToolStripMenuItem_Click;
             // 
@@ -135,7 +138,7 @@
             textBoxPlayer2.BackColor = SystemColors.HighlightText;
             textBoxPlayer2.BorderStyle = BorderStyle.None;
             textBoxPlayer2.Font = new Font("Calibri", 24F, FontStyle.Regular, GraphicsUnit.Point);
-            textBoxPlayer2.Location = new Point(546, 577);
+            textBoxPlayer2.Location = new Point(460, 577);
             textBoxPlayer2.Name = "textBoxPlayer2";
             textBoxPlayer2.PlaceholderText = "Player 2";
             textBoxPlayer2.Size = new Size(108, 40);
@@ -146,7 +149,7 @@
             textBoxPlayer1.BackColor = SystemColors.HighlightText;
             textBoxPlayer1.BorderStyle = BorderStyle.None;
             textBoxPlayer1.Font = new Font("Calibri", 24F, FontStyle.Regular, GraphicsUnit.Point);
-            textBoxPlayer1.Location = new Point(210, 577);
+            textBoxPlayer1.Location = new Point(146, 577);
             textBoxPlayer1.Name = "textBoxPlayer1";
             textBoxPlayer1.PlaceholderText = "Player 1";
             textBoxPlayer1.Size = new Size(111, 40);
@@ -156,7 +159,7 @@
             // pictureBox2
             // 
             pictureBox2.Image = Properties.Resources._0;
-            pictureBox2.Location = new Point(59, 565);
+            pictureBox2.Location = new Point(12, 565);
             pictureBox2.Name = "pictureBox2";
             pictureBox2.Size = new Size(128, 118);
             pictureBox2.TabIndex = 4;
@@ -165,41 +168,78 @@
             // pictureBox3
             // 
             pictureBox3.Image = Properties.Resources._11;
-            pictureBox3.Location = new Point(395, 565);
+            pictureBox3.Location = new Point(574, 565);
             pictureBox3.Name = "pictureBox3";
             pictureBox3.Size = new Size(127, 118);
             pictureBox3.TabIndex = 5;
             pictureBox3.TabStop = false;
             pictureBox3.Click += pictureBox3_Click;
             // 
-            // label1PlayerOneTurn
-            // 
-            label1PlayerOneTurn.AutoSize = true;
-            label1PlayerOneTurn.BackColor = SystemColors.MenuHighlight;
-            label1PlayerOneTurn.Location = new Point(210, 634);
-            label1PlayerOneTurn.Name = "label1PlayerOneTurn";
-            label1PlayerOneTurn.Size = new Size(74, 15);
-            label1PlayerOneTurn.TabIndex = 6;
-            label1PlayerOneTurn.Text = "Its your turn!";
-            label1PlayerOneTurn.Click += label1PlayerOneTurn_Click;
-            // 
             // label2PlayerTwoTurn
             // 
             label2PlayerTwoTurn.AutoSize = true;
             label2PlayerTwoTurn.BackColor = SystemColors.MenuHighlight;
-            label2PlayerTwoTurn.Location = new Point(546, 634);
+            label2PlayerTwoTurn.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold, GraphicsUnit.Point);
+            label2PlayerTwoTurn.Location = new Point(466, 643);
             label2PlayerTwoTurn.Name = "label2PlayerTwoTurn";
-            label2PlayerTwoTurn.Size = new Size(74, 15);
+            label2PlayerTwoTurn.Size = new Size(102, 20);
             label2PlayerTwoTurn.TabIndex = 7;
             label2PlayerTwoTurn.Text = "Its your turn!";
+            // 
+            // player1Counter
+            // 
+            player1Counter.AutoSize = true;
+            player1Counter.BackColor = SystemColors.ActiveCaptionText;
+            player1Counter.ForeColor = SystemColors.ButtonHighlight;
+            player1Counter.Location = new Point(32, 611);
+            player1Counter.Name = "player1Counter";
+            player1Counter.Size = new Size(88, 15);
+            player1Counter.TabIndex = 8;
+            player1Counter.Text = "player1Counter";
+            // 
+            // player2Counter
+            // 
+            player2Counter.AutoSize = true;
+            player2Counter.BackColor = SystemColors.MenuBar;
+            player2Counter.Location = new Point(593, 611);
+            player2Counter.Name = "player2Counter";
+            player2Counter.Size = new Size(88, 15);
+            player2Counter.TabIndex = 9;
+            player2Counter.Text = "player2Counter";
+            // 
+            // startGameBtn
+            // 
+            startGameBtn.BackColor = SystemColors.GradientInactiveCaption;
+            startGameBtn.Font = new Font("Segoe UI", 18F, FontStyle.Regular, GraphicsUnit.Point);
+            startGameBtn.Location = new Point(263, 602);
+            startGameBtn.Name = "startGameBtn";
+            startGameBtn.Size = new Size(191, 47);
+            startGameBtn.TabIndex = 10;
+            startGameBtn.Text = "Start Game";
+            startGameBtn.UseVisualStyleBackColor = false;
+            startGameBtn.Click += startGameBtn_Click;
+            // 
+            // label1Player1Turn
+            // 
+            label1Player1Turn.AutoSize = true;
+            label1Player1Turn.BackColor = SystemColors.MenuHighlight;
+            label1Player1Turn.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold, GraphicsUnit.Point);
+            label1Player1Turn.Location = new Point(146, 643);
+            label1Player1Turn.Name = "label1Player1Turn";
+            label1Player1Turn.Size = new Size(102, 20);
+            label1Player1Turn.TabIndex = 11;
+            label1Player1Turn.Text = "Its your turn!";
             // 
             // ONeilloGame
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(713, 683);
+            Controls.Add(label1Player1Turn);
+            Controls.Add(startGameBtn);
+            Controls.Add(player2Counter);
+            Controls.Add(player1Counter);
             Controls.Add(label2PlayerTwoTurn);
-            Controls.Add(label1PlayerOneTurn);
             Controls.Add(pictureBox3);
             Controls.Add(pictureBox2);
             Controls.Add(textBoxPlayer2);
@@ -236,7 +276,10 @@
         private TextBox textBoxPlayer1;
         private PictureBox pictureBox2;
         private PictureBox pictureBox3;
-        private Label label1PlayerOneTurn;
         private Label label2PlayerTwoTurn;
+        private Label player1Counter;
+        private Label player2Counter;
+        private Button startGameBtn;
+        private Label label1Player1Turn;
     }
 }

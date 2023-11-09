@@ -22,14 +22,15 @@ namespace ONeilloGame
 
         public GameBoardControl()
         {
+            ONeilloGame parent = (ONeilloGame)this.Parent;
             InitializeComponent();
+
             //To set the first point and the last point on the board.
             Point topCorner = new Point(0, 0);
             Point bottomCorner = new Point(8, 8);
 
             gameboardCoords = this.MakeBoardGame();
 
-            ONeilloGame parent = (ONeilloGame)this.Parent;
             try
             {
                 this.gameboardGui = new GameboardImageArray(parent, gameboardCoords, topCorner, bottomCorner, tileMargin, imagePath);
