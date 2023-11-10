@@ -8,6 +8,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+//TO DO:
+//Get gameboard parent working correctly
+//Check code logic
+//Speak setting
+//JSON File setting - for new and load game
+//Exit game - save if half way through a game prompt
+//Board counters - number of counters of each colour
+
 //the user controls surrounding the game board
 
 namespace ONeilloGame
@@ -50,19 +58,21 @@ namespace ONeilloGame
 
         }
 
-        //private void label1PlayerOneTurn_Click(object sender, EventArgs e)
-        //{
-        //    if (playerColour == 0)
-        //    {
-        //        labelPlayerOneTurn.Show();
-        //        label2PlayerTwoTurn.Hide();
-        //    }
-        //    else if (playerColour == 1)
-        //    {
-        //        label2PlayerTwoTurn.Show();
-        //        labelPlayerOneTurn.Hide();
-        //    }
-        //}
+        private void label1PlayerOneTurn_Click(object sender, EventArgs e)
+        {
+            //need to figure out how to pull in the colour from the gameboard controls code 
+
+            //if (playerColour == 0)
+            //{
+            //    bottomlabel1Player1Turn.Show();
+            //    bottomlabel2PlayerTwoTurn.Hide();
+            //}
+            //else if (playerColour == 1)
+            //{
+            //    bottomlabel2PlayerTwoTurn.Show();
+            //    bottomlabel1Player1Turn.Hide();
+            //}
+        }
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -76,8 +86,44 @@ namespace ONeilloGame
         private void startGameBtn_Click(object sender, EventArgs e)
         {
             MessageBox.Show("Let's go! The game has started.");
-            textBoxPlayer1.Enabled = false;
-            textBoxPlayer2.Enabled = false;
+            bottomtextBoxPlayer1.Enabled = false;
+            bottomtextBoxPlayer2.Enabled = false;
+        }
+
+        private void player1Counter_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void informationPanelToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (informationPanelToolStripMenuItem.Checked)
+            {
+                // Hide the controls
+                bottompictureBox1.Hide();
+                bottomtextBoxPlayer2.Hide();
+                bottomtextBoxPlayer1.Hide();
+                bottompictureBox2.Hide();
+                bottompictureBox3.Hide();
+                bottomlabel2PlayerTwoTurn.Hide();
+                bottomplayer1Counter.Hide();
+                bottomplayer2Counter.Hide();
+                bottomstartGameBtn.Hide();
+                bottomlabel1Player1Turn.Hide();
+            }
+            else
+            {
+                bottompictureBox1.Show();
+                bottomtextBoxPlayer2.Show();
+                bottomtextBoxPlayer1.Show();
+                bottompictureBox2.Show();
+                bottompictureBox3.Show();
+                bottomlabel2PlayerTwoTurn.Show();
+                bottomplayer1Counter.Show();
+                bottomplayer2Counter.Show();
+                bottomstartGameBtn.Show();
+                bottomlabel1Player1Turn.Show();
+            }
         }
     }
 }

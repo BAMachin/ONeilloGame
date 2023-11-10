@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ONeilloGame));
-            pictureBox1 = new PictureBox();
+            bottompictureBox1 = new PictureBox();
             menuStrip1 = new MenuStrip();
             gameToolStripMenuItem = new ToolStripMenuItem();
             newGameToolStripMenuItem = new ToolStripMenuItem();
@@ -40,30 +40,30 @@
             informationPanelToolStripMenuItem = new ToolStripMenuItem();
             helpToolStripMenuItem = new ToolStripMenuItem();
             aboutToolStripMenuItem = new ToolStripMenuItem();
-            textBoxPlayer2 = new TextBox();
-            textBoxPlayer1 = new TextBox();
-            pictureBox2 = new PictureBox();
-            pictureBox3 = new PictureBox();
-            label2PlayerTwoTurn = new Label();
-            player1Counter = new Label();
-            player2Counter = new Label();
-            startGameBtn = new Button();
-            label1Player1Turn = new Label();
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
+            bottomtextBoxPlayer2 = new TextBox();
+            bottomtextBoxPlayer1 = new TextBox();
+            bottompictureBox2 = new PictureBox();
+            bottompictureBox3 = new PictureBox();
+            bottomlabel2PlayerTwoTurn = new Label();
+            bottomplayer1Counter = new Label();
+            bottomplayer2Counter = new Label();
+            bottomstartGameBtn = new Button();
+            bottomlabel1Player1Turn = new Label();
+            ((System.ComponentModel.ISupportInitialize)bottompictureBox1).BeginInit();
             menuStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox3).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)bottompictureBox2).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)bottompictureBox3).BeginInit();
             SuspendLayout();
             // 
-            // pictureBox1
+            // bottompictureBox1
             // 
-            pictureBox1.BackColor = SystemColors.MenuHighlight;
-            pictureBox1.Dock = DockStyle.Bottom;
-            pictureBox1.Location = new Point(0, 555);
-            pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(713, 128);
-            pictureBox1.TabIndex = 0;
-            pictureBox1.TabStop = false;
+            bottompictureBox1.BackColor = SystemColors.MenuHighlight;
+            bottompictureBox1.Dock = DockStyle.Bottom;
+            bottompictureBox1.Location = new Point(0, 558);
+            bottompictureBox1.Name = "bottompictureBox1";
+            bottompictureBox1.Size = new Size(712, 128);
+            bottompictureBox1.TabIndex = 0;
+            bottompictureBox1.TabStop = false;
             // 
             // menuStrip1
             // 
@@ -71,7 +71,7 @@
             menuStrip1.Items.AddRange(new ToolStripItem[] { gameToolStripMenuItem, settingsToolStripMenuItem, helpToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(713, 24);
+            menuStrip1.Size = new Size(712, 24);
             menuStrip1.TabIndex = 1;
             menuStrip1.Text = "menuStrip1";
             // 
@@ -110,14 +110,15 @@
             // speakToolStripMenuItem
             // 
             speakToolStripMenuItem.Name = "speakToolStripMenuItem";
-            speakToolStripMenuItem.Size = new Size(169, 22);
+            speakToolStripMenuItem.Size = new Size(180, 22);
             speakToolStripMenuItem.Text = "Speak";
             // 
             // informationPanelToolStripMenuItem
             // 
             informationPanelToolStripMenuItem.Name = "informationPanelToolStripMenuItem";
-            informationPanelToolStripMenuItem.Size = new Size(169, 22);
+            informationPanelToolStripMenuItem.Size = new Size(180, 22);
             informationPanelToolStripMenuItem.Text = "Information Panel";
+            informationPanelToolStripMenuItem.Click += informationPanelToolStripMenuItem_Click;
             // 
             // helpToolStripMenuItem
             // 
@@ -129,139 +130,140 @@
             // aboutToolStripMenuItem
             // 
             aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            aboutToolStripMenuItem.Size = new Size(180, 22);
+            aboutToolStripMenuItem.Size = new Size(107, 22);
             aboutToolStripMenuItem.Text = "About";
             aboutToolStripMenuItem.Click += aboutToolStripMenuItem_Click;
             // 
-            // textBoxPlayer2
+            // bottomtextBoxPlayer2
             // 
-            textBoxPlayer2.BackColor = SystemColors.HighlightText;
-            textBoxPlayer2.BorderStyle = BorderStyle.None;
-            textBoxPlayer2.Font = new Font("Calibri", 24F, FontStyle.Regular, GraphicsUnit.Point);
-            textBoxPlayer2.Location = new Point(460, 577);
-            textBoxPlayer2.Name = "textBoxPlayer2";
-            textBoxPlayer2.PlaceholderText = "Player 2";
-            textBoxPlayer2.Size = new Size(108, 40);
-            textBoxPlayer2.TabIndex = 3;
+            bottomtextBoxPlayer2.BackColor = SystemColors.HighlightText;
+            bottomtextBoxPlayer2.BorderStyle = BorderStyle.None;
+            bottomtextBoxPlayer2.Font = new Font("Calibri", 24F, FontStyle.Regular, GraphicsUnit.Point);
+            bottomtextBoxPlayer2.Location = new Point(460, 577);
+            bottomtextBoxPlayer2.Name = "bottomtextBoxPlayer2";
+            bottomtextBoxPlayer2.PlaceholderText = "Player 2";
+            bottomtextBoxPlayer2.Size = new Size(108, 40);
+            bottomtextBoxPlayer2.TabIndex = 3;
             // 
-            // textBoxPlayer1
+            // bottomtextBoxPlayer1
             // 
-            textBoxPlayer1.BackColor = SystemColors.HighlightText;
-            textBoxPlayer1.BorderStyle = BorderStyle.None;
-            textBoxPlayer1.Font = new Font("Calibri", 24F, FontStyle.Regular, GraphicsUnit.Point);
-            textBoxPlayer1.Location = new Point(146, 577);
-            textBoxPlayer1.Name = "textBoxPlayer1";
-            textBoxPlayer1.PlaceholderText = "Player 1";
-            textBoxPlayer1.Size = new Size(111, 40);
-            textBoxPlayer1.TabIndex = 2;
-            textBoxPlayer1.TextChanged += textBox1_TextChanged;
+            bottomtextBoxPlayer1.BackColor = SystemColors.HighlightText;
+            bottomtextBoxPlayer1.BorderStyle = BorderStyle.None;
+            bottomtextBoxPlayer1.Font = new Font("Calibri", 24F, FontStyle.Regular, GraphicsUnit.Point);
+            bottomtextBoxPlayer1.Location = new Point(146, 577);
+            bottomtextBoxPlayer1.Name = "bottomtextBoxPlayer1";
+            bottomtextBoxPlayer1.PlaceholderText = "Player 1";
+            bottomtextBoxPlayer1.Size = new Size(111, 40);
+            bottomtextBoxPlayer1.TabIndex = 2;
+            bottomtextBoxPlayer1.TextChanged += textBox1_TextChanged;
             // 
-            // pictureBox2
+            // bottompictureBox2
             // 
-            pictureBox2.Image = Properties.Resources._0;
-            pictureBox2.Location = new Point(12, 565);
-            pictureBox2.Name = "pictureBox2";
-            pictureBox2.Size = new Size(128, 118);
-            pictureBox2.TabIndex = 4;
-            pictureBox2.TabStop = false;
+            bottompictureBox2.Image = Properties.Resources._0;
+            bottompictureBox2.Location = new Point(12, 565);
+            bottompictureBox2.Name = "bottompictureBox2";
+            bottompictureBox2.Size = new Size(128, 118);
+            bottompictureBox2.TabIndex = 4;
+            bottompictureBox2.TabStop = false;
             // 
-            // pictureBox3
+            // bottompictureBox3
             // 
-            pictureBox3.Image = Properties.Resources._11;
-            pictureBox3.Location = new Point(574, 565);
-            pictureBox3.Name = "pictureBox3";
-            pictureBox3.Size = new Size(127, 118);
-            pictureBox3.TabIndex = 5;
-            pictureBox3.TabStop = false;
-            pictureBox3.Click += pictureBox3_Click;
+            bottompictureBox3.Image = Properties.Resources._11;
+            bottompictureBox3.Location = new Point(574, 565);
+            bottompictureBox3.Name = "bottompictureBox3";
+            bottompictureBox3.Size = new Size(127, 118);
+            bottompictureBox3.TabIndex = 5;
+            bottompictureBox3.TabStop = false;
+            bottompictureBox3.Click += pictureBox3_Click;
             // 
-            // label2PlayerTwoTurn
+            // bottomlabel2PlayerTwoTurn
             // 
-            label2PlayerTwoTurn.AutoSize = true;
-            label2PlayerTwoTurn.BackColor = SystemColors.MenuHighlight;
-            label2PlayerTwoTurn.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold, GraphicsUnit.Point);
-            label2PlayerTwoTurn.Location = new Point(466, 643);
-            label2PlayerTwoTurn.Name = "label2PlayerTwoTurn";
-            label2PlayerTwoTurn.Size = new Size(102, 20);
-            label2PlayerTwoTurn.TabIndex = 7;
-            label2PlayerTwoTurn.Text = "Its your turn!";
+            bottomlabel2PlayerTwoTurn.AutoSize = true;
+            bottomlabel2PlayerTwoTurn.BackColor = SystemColors.MenuHighlight;
+            bottomlabel2PlayerTwoTurn.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold, GraphicsUnit.Point);
+            bottomlabel2PlayerTwoTurn.Location = new Point(466, 643);
+            bottomlabel2PlayerTwoTurn.Name = "bottomlabel2PlayerTwoTurn";
+            bottomlabel2PlayerTwoTurn.Size = new Size(102, 20);
+            bottomlabel2PlayerTwoTurn.TabIndex = 7;
+            bottomlabel2PlayerTwoTurn.Text = "Its your turn!";
             // 
-            // player1Counter
+            // bottomplayer1Counter
             // 
-            player1Counter.AutoSize = true;
-            player1Counter.BackColor = SystemColors.ActiveCaptionText;
-            player1Counter.ForeColor = SystemColors.ButtonHighlight;
-            player1Counter.Location = new Point(32, 611);
-            player1Counter.Name = "player1Counter";
-            player1Counter.Size = new Size(88, 15);
-            player1Counter.TabIndex = 8;
-            player1Counter.Text = "player1Counter";
+            bottomplayer1Counter.AutoSize = true;
+            bottomplayer1Counter.BackColor = SystemColors.ActiveCaptionText;
+            bottomplayer1Counter.ForeColor = SystemColors.ButtonHighlight;
+            bottomplayer1Counter.Location = new Point(32, 611);
+            bottomplayer1Counter.Name = "bottomplayer1Counter";
+            bottomplayer1Counter.Size = new Size(88, 15);
+            bottomplayer1Counter.TabIndex = 8;
+            bottomplayer1Counter.Text = "player1Counter";
+            bottomplayer1Counter.Click += player1Counter_Click;
             // 
-            // player2Counter
+            // bottomplayer2Counter
             // 
-            player2Counter.AutoSize = true;
-            player2Counter.BackColor = SystemColors.MenuBar;
-            player2Counter.Location = new Point(593, 611);
-            player2Counter.Name = "player2Counter";
-            player2Counter.Size = new Size(88, 15);
-            player2Counter.TabIndex = 9;
-            player2Counter.Text = "player2Counter";
+            bottomplayer2Counter.AutoSize = true;
+            bottomplayer2Counter.BackColor = SystemColors.MenuBar;
+            bottomplayer2Counter.Location = new Point(593, 611);
+            bottomplayer2Counter.Name = "bottomplayer2Counter";
+            bottomplayer2Counter.Size = new Size(88, 15);
+            bottomplayer2Counter.TabIndex = 9;
+            bottomplayer2Counter.Text = "player2Counter";
             // 
-            // startGameBtn
+            // bottomstartGameBtn
             // 
-            startGameBtn.BackColor = SystemColors.GradientInactiveCaption;
-            startGameBtn.Font = new Font("Segoe UI", 18F, FontStyle.Regular, GraphicsUnit.Point);
-            startGameBtn.Location = new Point(263, 602);
-            startGameBtn.Name = "startGameBtn";
-            startGameBtn.Size = new Size(191, 47);
-            startGameBtn.TabIndex = 10;
-            startGameBtn.Text = "Start Game";
-            startGameBtn.UseVisualStyleBackColor = false;
-            startGameBtn.Click += startGameBtn_Click;
+            bottomstartGameBtn.BackColor = SystemColors.GradientInactiveCaption;
+            bottomstartGameBtn.Font = new Font("Segoe UI", 18F, FontStyle.Regular, GraphicsUnit.Point);
+            bottomstartGameBtn.Location = new Point(263, 602);
+            bottomstartGameBtn.Name = "bottomstartGameBtn";
+            bottomstartGameBtn.Size = new Size(191, 47);
+            bottomstartGameBtn.TabIndex = 10;
+            bottomstartGameBtn.Text = "Start Game";
+            bottomstartGameBtn.UseVisualStyleBackColor = false;
+            bottomstartGameBtn.Click += startGameBtn_Click;
             // 
-            // label1Player1Turn
+            // bottomlabel1Player1Turn
             // 
-            label1Player1Turn.AutoSize = true;
-            label1Player1Turn.BackColor = SystemColors.MenuHighlight;
-            label1Player1Turn.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold, GraphicsUnit.Point);
-            label1Player1Turn.Location = new Point(146, 643);
-            label1Player1Turn.Name = "label1Player1Turn";
-            label1Player1Turn.Size = new Size(102, 20);
-            label1Player1Turn.TabIndex = 11;
-            label1Player1Turn.Text = "Its your turn!";
+            bottomlabel1Player1Turn.AutoSize = true;
+            bottomlabel1Player1Turn.BackColor = SystemColors.MenuHighlight;
+            bottomlabel1Player1Turn.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold, GraphicsUnit.Point);
+            bottomlabel1Player1Turn.Location = new Point(146, 643);
+            bottomlabel1Player1Turn.Name = "bottomlabel1Player1Turn";
+            bottomlabel1Player1Turn.Size = new Size(102, 20);
+            bottomlabel1Player1Turn.TabIndex = 11;
+            bottomlabel1Player1Turn.Text = "Its your turn!";
             // 
             // ONeilloGame
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(713, 683);
-            Controls.Add(label1Player1Turn);
-            Controls.Add(startGameBtn);
-            Controls.Add(player2Counter);
-            Controls.Add(player1Counter);
-            Controls.Add(label2PlayerTwoTurn);
-            Controls.Add(pictureBox3);
-            Controls.Add(pictureBox2);
-            Controls.Add(textBoxPlayer2);
-            Controls.Add(textBoxPlayer1);
-            Controls.Add(pictureBox1);
+            ClientSize = new Size(712, 686);
+            Controls.Add(bottomlabel1Player1Turn);
+            Controls.Add(bottomstartGameBtn);
+            Controls.Add(bottomplayer2Counter);
+            Controls.Add(bottomplayer1Counter);
+            Controls.Add(bottomlabel2PlayerTwoTurn);
+            Controls.Add(bottompictureBox3);
+            Controls.Add(bottompictureBox2);
+            Controls.Add(bottomtextBoxPlayer2);
+            Controls.Add(bottomtextBoxPlayer1);
+            Controls.Add(bottompictureBox1);
             Controls.Add(menuStrip1);
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "ONeilloGame";
             Text = "ONeillo Game!";
             Load += UserControl1_Load;
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)bottompictureBox1).EndInit();
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox3).EndInit();
+            ((System.ComponentModel.ISupportInitialize)bottompictureBox2).EndInit();
+            ((System.ComponentModel.ISupportInitialize)bottompictureBox3).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
 
         #endregion
 
-        private PictureBox pictureBox1;
+        private PictureBox bottompictureBox1;
         private MenuStrip menuStrip1;
         private ToolStripMenuItem gameToolStripMenuItem;
         private ToolStripMenuItem newGameToolStripMenuItem;
@@ -272,14 +274,14 @@
         private ToolStripMenuItem informationPanelToolStripMenuItem;
         private ToolStripMenuItem helpToolStripMenuItem;
         private ToolStripMenuItem aboutToolStripMenuItem;
-        private TextBox textBoxPlayer2;
-        private TextBox textBoxPlayer1;
-        private PictureBox pictureBox2;
-        private PictureBox pictureBox3;
-        private Label label2PlayerTwoTurn;
-        private Label player1Counter;
-        private Label player2Counter;
-        private Button startGameBtn;
-        private Label label1Player1Turn;
+        private TextBox bottomtextBoxPlayer2;
+        private TextBox bottomtextBoxPlayer1;
+        private PictureBox bottompictureBox2;
+        private PictureBox bottompictureBox3;
+        private Label bottomlabel2PlayerTwoTurn;
+        private Label bottomplayer1Counter;
+        private Label bottomplayer2Counter;
+        private Button bottomstartGameBtn;
+        private Label bottomlabel1Player1Turn;
     }
 }

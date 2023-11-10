@@ -1,4 +1,5 @@
 ﻿using GameboardGUI;
+using System.Diagnostics.Eventing.Reader;
 using System.Security.AccessControl;
 using System.Security.Cryptography.X509Certificates;
 using System.Windows.Forms;
@@ -22,7 +23,6 @@ namespace ONeilloGame
 
         public GameBoardControl()
         {
-            ONeilloGame parent = (ONeilloGame)this.Parent;
             InitializeComponent();
 
             //To set the first point and the last point on the board.
@@ -31,6 +31,7 @@ namespace ONeilloGame
 
             gameboardCoords = this.MakeBoardGame();
 
+            ONeilloGame parent = (ONeilloGame)this.Parent;
             try
             {
                 this.gameboardGui = new GameboardImageArray(parent, gameboardCoords, topCorner, bottomCorner, tileMargin, imagePath);
@@ -88,10 +89,9 @@ namespace ONeilloGame
         }
         public bool CheckSurroundingTiles(int row, int col, int playerColour)
         {
-            //variable to change all colours inbetween two counters to flip them to the opposite colour
-            //bool flipAllPlayerCounter = false; 
-
+            //List for all points that is looked at. 
             List<int> pointsEvaluated = new List<int>();
+
             //Looks at each direction from the point of the tile clicked
             int[] dx = { -1, -1, -1, 0, 0, 1, 1, 1 };
             int[] dy = { -1, 0, 1, -1, 1, -1, 0, 1 };
@@ -112,34 +112,23 @@ namespace ONeilloGame
 
                     if ((tileValue == 10) || (tileValue == playerColour))
                     {
-                        //tile is blank
-                        //or
-                        //tile is the same as player colour
+                        //tile is blank or tile is the same as player colour
                         //not valid
                         return false; 
                     }
                     else
                     {
-                        //tile is not blank or player colour
+                        //tile is not blank or the current player colour
                         //valid move
-                        moveIsValid(pointsEvaluated); 
+                        moveIsValid(pointsEvaluated, row, col);
                     }
-                    
-                    //NEEDS TO MEET ANOTHER COUNTER OF THE SAME COLOUR 
-                    //if its gets to find a counter of colour playing or empty then it is a valid move 
-                    // make a list of the counters scanned
-                    // check if its valid
-                    // for each loop to swap those points to the colour playing
-                    // carry on checking to ensure all counters are changed - multipoint direction turns 
-                    // but do that afterwards get first bit of logic in first 
-
 
                     // Move to the next tile in this direction
                     x += dx[dir];
                     y += dy[dir];
                 }
             }
-            moveIsValid(pointsEvaluated);
+            //moveIsValid(pointsEvaluated, row, col); - don't think it needs to do this because the move because its not in the boundary
             return false;
         }
 
@@ -148,18 +137,29 @@ namespace ONeilloGame
             playerColour = (playerColour == 0) ? 1 : 0;
         }
 
-        public void moveIsValid(List<int> pointsEvaluated)
+        public bool moveIsValid(List<int> pointsEvaluated, int rowSelect, int colSelect)
         {
             foreach (int point in pointsEvaluated)
             {
-                //setTileForGamePlay(rowSelect, colSelect, playerColor);
+                // Swap the colors of the points
+                SwapColour(point, rowSelect, colSelect);
             }
+
+            // Indicate that the move is valid
+            return true;
         }
 
-        public void setTileForGamePlay(int rowSelect, int colSelect, int playerColor)
+        private void SwapColour(int point, int rowSelect, int colSelect)
         {
-            string imageName = playerColor.ToString();
+            int newColour = (point == 0) ? 1 : 0;
+            setTileForGamePlay(rowSelect, colSelect, newColour);
+        }
+
+        public void setTileForGamePlay(int rowSelect, int colSelect, int playerColour)
+        {
+            string imageName = playerColour.ToString();
             gameboardGui.SetTile(rowSelect, colSelect, imageName);
+            //tiles have been placed now switch to other colour.
             SwitchPlayerColor();
         }
 
