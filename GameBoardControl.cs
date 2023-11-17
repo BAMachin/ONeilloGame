@@ -6,14 +6,17 @@ using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
 
 //The gameboard logic
+//Add in something to count how many counters each turn
 
 namespace ONeilloGame
 {
-
     public partial class GameBoardControl : UserControl
     {
         const int COLUMNS = 8;
         const int ROWS = 8;
+
+        //Returning the array that makes up the board.
+        int[,] gameBoardArray = new int[ROWS, COLUMNS];
 
         GameboardImageArray gameboardGui;
         public int[,] gameboardCoords;
@@ -21,22 +24,28 @@ namespace ONeilloGame
         private int playerColour = 0;
         const int tileMargin = 1;
 
-        public GameBoardControl()
+        public int PlayerColour
+        {
+            get { return playerColour; }
+        }
+
+        public GameBoardControl(Form parent) //Pulling in the parent form before code runs
         {
             InitializeComponent();
 
-            //To set the first point and the last point on the board.
-            Point topCorner = new Point(0, 0);
-            Point bottomCorner = new Point(8, 8);
+            //To set the first point and the last point on the board
+            Point topCorner = new Point(10, 30);
+            Point bottomCorner = new Point(10,135);
 
             gameboardCoords = this.MakeBoardGame();
 
-            ONeilloGame parent = (ONeilloGame)this.Parent;
             try
             {
                 this.gameboardGui = new GameboardImageArray(parent, gameboardCoords, topCorner, bottomCorner, tileMargin, imagePath);
                 gameboardGui.UpdateBoardGui(gameboardCoords);
                 gameboardGui.TileClicked += new GameboardImageArray.TileClickedEventDelegate(GameTileClicked);
+                CountTheTilesOnTheBoard(); //does it when board is first set up
+
             }
             catch (Exception ex)
             {
@@ -48,9 +57,7 @@ namespace ONeilloGame
 
         public int[,] MakeBoardGame()
         {
-            //Returning the array that makes up the board.
-            int[,] gameBoardArray = new int[ROWS, COLUMNS];
-
+            
             //Changing all default values to 10, to ensure only 4 in the middle are coloured in. 
             for (int i = 0; i < ROWS; i++)
             {
@@ -68,31 +75,77 @@ namespace ONeilloGame
 
             return gameBoardArray;
         }
+
+        public (int blackCounters, int whiteCounters) CountTheTilesOnTheBoard()
+        {
+            int blackCounters = 0;
+            int whiteCounters = 0;
+
+            for (int i = 0; i < ROWS; i++)
+            {
+                for (int j = 0; j < COLUMNS; j++)
+                {
+                    int tileValue = gameBoardArray[i, j];
+
+                    if (tileValue == 0)
+                    {
+                        blackCounters++;
+                    }
+                    else if (tileValue == 1)
+                    {
+                        whiteCounters++;
+                    }
+                }
+            }
+
+            return (blackCounters, whiteCounters);
+        }
+
+
+        public int rowSelect;
+        public int colSelect;
+
+        public int RowSelected
+        {
+            get { return rowSelect; }
+            set { rowSelect = value; }
+        }
+
+        public int ColSelected
+        {
+            get { return colSelect; }
+            set { colSelect = value; }
+        }
+
         private void GameTileClicked(object sender, EventArgs e)
         {
+
+            //Gets the value within the array that was selected
             int colSelect = gameboardGui.GetCurrentColumnIndex(sender);
             int rowSelect = gameboardGui.GetCurrentRowIndex(sender);
 
-            //Gets the value within the array that was selected
+            MessageBox.Show($"{colSelect}, {rowSelect} has been clicked");
 
-            bool isValidMove = CheckSurroundingTiles(rowSelect, colSelect, playerColour);
-
+            bool isValidMove = CheckSurroundingTiles(rowSelect, colSelect, playerColour, gameBoardArray);
             if (isValidMove)
             {
-                setTileForGamePlay(rowSelect, colSelect, playerColour);
+                //Moves have been made
+                CountTheTilesOnTheBoard();
+                SwitchPlayerColour();
+                
             }
             else
             {
-                DialogResult result = MessageBox.Show("Move not valid");
+                //the move isn't valid
+                MessageBox.Show("Back into game tile clicked meth - Move not valid");
             }
-
+            
         }
-        public bool CheckSurroundingTiles(int row, int col, int playerColour)
+        public bool CheckSurroundingTiles(int row, int col, int playerColour, int[,] gameBoardArray)
         {
-            //List for all points that is looked at. 
-            List<int> pointsEvaluated = new List<int>();
+            bool isValidMove = false;
+            List<int> tileCoordinatesToFlip = new List<int>();
 
-            //Looks at each direction from the point of the tile clicked
             int[] dx = { -1, -1, -1, 0, 0, 1, 1, 1 };
             int[] dy = { -1, 0, 1, -1, 1, -1, 0, 1 };
 
@@ -101,68 +154,82 @@ namespace ONeilloGame
                 int x = row + dx[dir];
                 int y = col + dy[dir];
 
-                // Check within boundaries of the board
-                while (x >= 0 && x < ROWS && y >= 0 && y < COLUMNS)
-                {
-                    //gets tile value
-                    int tileValue = gameboardCoords[x, y];
-                    
-                    //adds tile value to a list
-                    pointsEvaluated.Add(tileValue);
+                List<int> tileValuesWithinCircumference = new List<int>();
 
-                    if ((tileValue == 10) || (tileValue == playerColour))
+                int opponentsColour = (playerColour == 0) ? 1 : 0;
+                bool foundOpponent = false;
+
+                while (x >= 0 && x < gameBoardArray.GetLength(0) && y >= 0 && y < gameBoardArray.GetLength(1))
+                {
+                    int tileValue = gameBoardArray[x, y];
+                    tileValuesWithinCircumference.Add(tileValue);
+
+                    if (tileValue == opponentsColour)
                     {
-                        //tile is blank or tile is the same as player colour
-                        //not valid
-                        return false; 
+                        foundOpponent = true;
+                        tileCoordinatesToFlip.Add(x * 100 + y); // Assuming a unique identifier for each cell
+                    }
+                    else if (tileValue == playerColour && foundOpponent)
+                    {
+                        // Opponent's color found, and there is at least one opponent's piece in between
+                        x += dx[dir];
+                        y += dy[dir];
+                        isValidMove = true;
+                        break;
+                    }
+                    else if (tileValue == 0) // Assuming 0 represents an empty tile
+                    {
+                        // Empty tile found, break the loop
+                        break;
                     }
                     else
                     {
-                        //tile is not blank or the current player colour
-                        //valid move
-                        moveIsValid(pointsEvaluated, row, col);
+                        // Not opponent's color or empty tile
+                        break;
                     }
 
-                    // Move to the next tile in this direction
                     x += dx[dir];
                     y += dy[dir];
                 }
             }
-            //moveIsValid(pointsEvaluated, row, col); - don't think it needs to do this because the move because its not in the boundary
-            return false;
+
+            if (isValidMove)
+            {
+                UpdateTiles(tileCoordinatesToFlip, row, col);
+            }
+
+            return isValidMove;
         }
 
-        private void SwitchPlayerColor()
+
+        public void UpdateTiles(List<int> tileCoordinatesToFlip, int rowSelect, int colSelect)
+        {
+            foreach (int tile in tileCoordinatesToFlip)
+            {
+                int x = tile / 100; // Extract row from unique identifier
+                int y = tile % 100; // Extract column from unique identifier
+                SwapColour(x, y);
+            }
+        }
+
+        private void SwapColour(int row, int col)
+        {
+            gameBoardArray[row, col] = (gameBoardArray[row, col] == 0) ? 1 : 0;
+            SetTileForGamePlay(row, col, gameBoardArray[row, col]);
+        }
+
+        public void SetTileForGamePlay(int rowSelect, int colSelect, int playerColour)
+        {
+            //tiles are set to the other colour
+            string imageName = playerColour.ToString();
+            gameboardGui.SetTile(rowSelect, colSelect, imageName);
+            
+
+        }
+        private void SwitchPlayerColour()
         {
             playerColour = (playerColour == 0) ? 1 : 0;
         }
-
-        public bool moveIsValid(List<int> pointsEvaluated, int rowSelect, int colSelect)
-        {
-            foreach (int point in pointsEvaluated)
-            {
-                // Swap the colors of the points
-                SwapColour(point, rowSelect, colSelect);
-            }
-
-            // Indicate that the move is valid
-            return true;
-        }
-
-        private void SwapColour(int point, int rowSelect, int colSelect)
-        {
-            int newColour = (point == 0) ? 1 : 0;
-            setTileForGamePlay(rowSelect, colSelect, newColour);
-        }
-
-        public void setTileForGamePlay(int rowSelect, int colSelect, int playerColour)
-        {
-            string imageName = playerColour.ToString();
-            gameboardGui.SetTile(rowSelect, colSelect, imageName);
-            //tiles have been placed now switch to other colour.
-            SwitchPlayerColor();
-        }
-
 
         private void ONeilloGame_Load(object sender, EventArgs e)
         {
