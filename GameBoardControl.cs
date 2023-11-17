@@ -68,10 +68,10 @@ namespace ONeilloGame
             }
 
             //Setting the 4 points in the middle of the UI
-            gameBoardArray[3, 3] = 0;
-            gameBoardArray[4, 4] = 0;
-            gameBoardArray[4, 3] = 1;
-            gameBoardArray[3, 4] = 1;
+            gameBoardArray[3, 3] = 1;
+            gameBoardArray[4, 4] = 1;
+            gameBoardArray[4, 3] = 0;
+            gameBoardArray[3, 4] = 0;
 
             return gameBoardArray;
         }
@@ -132,6 +132,7 @@ namespace ONeilloGame
                 //Moves have been made
                 CountTheTilesOnTheBoard();
                 SwitchPlayerColour();
+                MessageBox.Show($"player {playerColour} now playing");
                 
             }
             else
@@ -155,6 +156,7 @@ namespace ONeilloGame
                 int y = col + dy[dir];
 
                 List<int> tileValuesWithinCircumference = new List<int>();
+                List<int> currentDirectionTilesToFlip = new List<int>();
 
                 int opponentsColour = (playerColour == 0) ? 1 : 0;
                 bool foundOpponent = false;
@@ -167,24 +169,28 @@ namespace ONeilloGame
                     if (tileValue == opponentsColour)
                     {
                         foundOpponent = true;
-                        tileCoordinatesToFlip.Add(x * 100 + y); // Assuming a unique identifier for each cell
+                        currentDirectionTilesToFlip.Add(x * 100 + y);
+
+                        // Check if the opponent is sandwiched by the current player's counters
+                        if (x - dx[dir] >= 0 && x - dx[dir] < gameBoardArray.GetLength(0) &&
+                            y - dy[dir] >= 0 && y - dy[dir] < gameBoardArray.GetLength(1) &&
+                            gameBoardArray[x - dx[dir], y - dy[dir]] == playerColour)
+                        {
+                            // Valid move condition for the edge
+                            isValidMove = true;
+                            tileCoordinatesToFlip.AddRange(currentDirectionTilesToFlip);
+                            break;
+                        }
                     }
                     else if (tileValue == playerColour && foundOpponent)
                     {
                         // Opponent's color found, and there is at least one opponent's piece in between
-                        x += dx[dir];
-                        y += dy[dir];
                         isValidMove = true;
+                        tileCoordinatesToFlip.AddRange(currentDirectionTilesToFlip);
                         break;
                     }
-                    else if (tileValue == 0) // Assuming 0 represents an empty tile
+                    else if (tileValue == 0 || !foundOpponent) // Break if empty tile or no opponent found
                     {
-                        // Empty tile found, break the loop
-                        break;
-                    }
-                    else
-                    {
-                        // Not opponent's color or empty tile
                         break;
                     }
 
@@ -193,30 +199,58 @@ namespace ONeilloGame
                 }
             }
 
+            // Check if the move is at the top or bottom row
+            if ((row == 0 || row == gameBoardArray.GetLength(0) - 1) && isValidMove)
+            {
+                // Check for sandwich conditions for the top or bottom row
+                int oppositeColour = (playerColour == 0) ? 1 : 0;
+
+                // Check for the sandwich condition above the current position
+                if (row > 0 && gameBoardArray[row - 1, col] == oppositeColour &&
+                    row < gameBoardArray.GetLength(0) - 2 && gameBoardArray[row + 2, col] == playerColour)
+                {
+                    // Valid move condition for the sandwich
+                    tileCoordinatesToFlip.Add((row - 1) * 100 + col); // Add the opponent's tile to flip
+                }
+
+                // Check for the sandwich condition below the current position
+                if (row < gameBoardArray.GetLength(0) - 2 && gameBoardArray[row + 1, col] == oppositeColour &&
+                    row > 0 && gameBoardArray[row - 2, col] == playerColour)
+                {
+                    // Valid move condition for the sandwich
+                    tileCoordinatesToFlip.Add((row + 1) * 100 + col); // Add the opponent's tile to flip
+                }
+            }
+
             if (isValidMove)
             {
-                UpdateTiles(tileCoordinatesToFlip, row, col);
+                UpdateTiles(tileCoordinatesToFlip, row, col, gameBoardArray);
             }
 
             return isValidMove;
         }
 
-
-        public void UpdateTiles(List<int> tileCoordinatesToFlip, int rowSelect, int colSelect)
+        public void UpdateTiles(List<int> tileCoordinatesToFlip, int rowSelect, int colSelect, int[,] gameBoardArray)
         {
             foreach (int tile in tileCoordinatesToFlip)
             {
                 int x = tile / 100; // Extract row from unique identifier
                 int y = tile % 100; // Extract column from unique identifier
-                SwapColour(x, y);
+                SwapColour(x, y, gameBoardArray); // Pass the gameBoardArray to SwapColour
             }
+
+            // Place the player's piece in the current position
+            gameBoardArray[rowSelect, colSelect] = playerColour; // Set the current player's color
+            SetTileForGamePlay(rowSelect, colSelect, playerColour); // Assuming SetTileForGamePlay sets the UI or representation
         }
 
-        private void SwapColour(int row, int col)
+        private void SwapColour(int row, int col, int[,] gameBoardArray)
         {
-            gameBoardArray[row, col] = (gameBoardArray[row, col] == 0) ? 1 : 0;
-            SetTileForGamePlay(row, col, gameBoardArray[row, col]);
+            gameBoardArray[row, col] = playerColour; // Set the current player's color
+            SetTileForGamePlay(row, col, playerColour); // Assuming SetTileForGamePlay sets the UI or representation
         }
+
+
 
         public void SetTileForGamePlay(int rowSelect, int colSelect, int playerColour)
         {

@@ -43,13 +43,14 @@ namespace ONeilloGame
             this.Controls.Add(gameBoardControl);
 
             //synthesizer = new SpeechSynthesizer();
-            gameBoardControl.Enabled = false; // Disable the game board initially
+            //gameBoardControl.Enabled = false; // Disable the game board initially
 
             UpdateCounters(null, EventArgs.Empty);
             CheckingWhichTurnItIs(null, EventArgs.Empty);
 
             informationPanelToolStripMenuItem.Checked = true;
             speakToolStripMenuItem.Checked = false;
+
         }
 
 
@@ -85,10 +86,10 @@ namespace ONeilloGame
             //ProvideTilePlacement(row, col); 
 
             (int blackCounters, int whiteCounters) counts = gameBoardControl.CountTheTilesOnTheBoard();
-
             string blackCountString = counts.blackCounters.ToString();
             string whiteCountString = counts.whiteCounters.ToString();
 
+            MessageBox.Show($"{blackCountString} {whiteCountString}");
             bottomplayer1Counter.Text = blackCountString;
             bottomplayer2Counter.Text = whiteCountString;
         }
