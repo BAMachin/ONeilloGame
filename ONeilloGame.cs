@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Speech.Synthesis;
 using System.Diagnostics;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 
 //TO DO:
@@ -39,46 +40,41 @@ namespace ONeilloGame
         public ONeilloGame()
         {
             InitializeComponent();
+
             gameBoardControl = new GameBoardControl(this);
             this.Controls.Add(gameBoardControl);
 
             //synthesizer = new SpeechSynthesizer();
             //gameBoardControl.Enabled = false; // Disable the game board initially
 
-            UpdateCounters(null, EventArgs.Empty);
-            CheckingWhichTurnItIs(null, EventArgs.Empty);
+            UpdateCounters(null, EventArgs.Empty); // this is only called once on start up  
+            CheckingWhichTurnItIs(null, EventArgs.Empty); // this is only called once on start up
+            
 
             informationPanelToolStripMenuItem.Checked = true;
             speakToolStripMenuItem.Checked = false;
-
         }
-
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
 
         }
-
         private void pictureBox2_Click(object sender, EventArgs e)
         {
 
         }
-
         private void pictureBox2_Click_1(object sender, EventArgs e)
         {
 
         }
-
         private void UserControl1_Load(object sender, EventArgs e)
         {
 
         }
-
         private void pictureBox3_Click(object sender, EventArgs e)
         {
 
         }
-
         private void UpdateCounters(object sender, EventArgs e)
         {
             //int row = gameBoardControl.RowSelected;
@@ -86,17 +82,25 @@ namespace ONeilloGame
             //ProvideTilePlacement(row, col); 
 
             (int blackCounters, int whiteCounters) counts = gameBoardControl.CountTheTilesOnTheBoard();
+
             string blackCountString = counts.blackCounters.ToString();
             string whiteCountString = counts.whiteCounters.ToString();
 
-            MessageBox.Show($"{blackCountString} {whiteCountString}");
+            MessageBox.Show($"black counters: {blackCountString}, white counters: {whiteCountString}");
             bottomplayer1Counter.Text = blackCountString;
             bottomplayer2Counter.Text = whiteCountString;
+        }
+
+        public int currentPlayerColour
+        {
+            set { currentPlayerColour = value; }
         }
 
         private void CheckingWhichTurnItIs(object sender, EventArgs e)
         {
             int currentPlayerColour = gameBoardControl.PlayerColour;
+            string currentPlayerColString = currentPlayerColour.ToString();
+            MessageBox.Show($"currently player is: {currentPlayerColString}"); 
 
             if (currentPlayerColour == 0) //black counter to go - player 1
             {

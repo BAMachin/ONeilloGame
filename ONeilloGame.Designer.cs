@@ -143,11 +143,11 @@
             bottomtextBoxPlayer2.BackColor = SystemColors.HighlightText;
             bottomtextBoxPlayer2.BorderStyle = BorderStyle.None;
             bottomtextBoxPlayer2.Cursor = Cursors.IBeam;
-            bottomtextBoxPlayer2.Font = new Font("Calibri", 24F, FontStyle.Regular, GraphicsUnit.Point);
+            bottomtextBoxPlayer2.Font = new Font("Calibri", 20.25F, FontStyle.Regular, GraphicsUnit.Point);
             bottomtextBoxPlayer2.Location = new Point(548, 649);
             bottomtextBoxPlayer2.Name = "bottomtextBoxPlayer2";
-            bottomtextBoxPlayer2.PlaceholderText = "Player 2";
-            bottomtextBoxPlayer2.Size = new Size(108, 40);
+            bottomtextBoxPlayer2.PlaceholderText = "Player #2";
+            bottomtextBoxPlayer2.Size = new Size(108, 33);
             bottomtextBoxPlayer2.TabIndex = 3;
             // 
             // bottomtextBoxPlayer1
@@ -157,11 +157,11 @@
             bottomtextBoxPlayer1.BackColor = SystemColors.HighlightText;
             bottomtextBoxPlayer1.BorderStyle = BorderStyle.None;
             bottomtextBoxPlayer1.Cursor = Cursors.IBeam;
-            bottomtextBoxPlayer1.Font = new Font("Calibri", 24F, FontStyle.Regular, GraphicsUnit.Point);
+            bottomtextBoxPlayer1.Font = new Font("Calibri", 20.25F, FontStyle.Regular, GraphicsUnit.Point);
             bottomtextBoxPlayer1.Location = new Point(138, 649);
             bottomtextBoxPlayer1.Name = "bottomtextBoxPlayer1";
-            bottomtextBoxPlayer1.PlaceholderText = "Player 1";
-            bottomtextBoxPlayer1.Size = new Size(111, 40);
+            bottomtextBoxPlayer1.PlaceholderText = "Player #1";
+            bottomtextBoxPlayer1.Size = new Size(111, 33);
             bottomtextBoxPlayer1.TabIndex = 2;
             bottomtextBoxPlayer1.UseWaitCursor = true;
             bottomtextBoxPlayer1.TextChanged += textBox1_TextChanged;
@@ -272,7 +272,10 @@
             Controls.Add(bottomtextBoxPlayer1);
             Controls.Add(bottompictureBox1);
             Controls.Add(menuStrip1);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = (Icon)resources.GetObject("$this.Icon");
+            MaximizeBox = false;
+            MinimizeBox = false;
             Name = "ONeilloGame";
             Text = "ONeillo Game!";
             Load += UserControl1_Load;

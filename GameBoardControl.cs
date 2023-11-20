@@ -3,6 +3,7 @@ using System.Diagnostics.Eventing.Reader;
 using System.Security.AccessControl;
 using System.Security.Cryptography.X509Certificates;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
 
 //The gameboard logic
@@ -35,7 +36,7 @@ namespace ONeilloGame
 
             //To set the first point and the last point on the board
             Point topCorner = new Point(10, 30);
-            Point bottomCorner = new Point(10,135);
+            Point bottomCorner = new Point(10, 135);
 
             gameboardCoords = this.MakeBoardGame();
 
@@ -45,7 +46,6 @@ namespace ONeilloGame
                 gameboardGui.UpdateBoardGui(gameboardCoords);
                 gameboardGui.TileClicked += new GameboardImageArray.TileClickedEventDelegate(GameTileClicked);
                 CountTheTilesOnTheBoard(); //does it when board is first set up
-
             }
             catch (Exception ex)
             {
@@ -57,7 +57,7 @@ namespace ONeilloGame
 
         public int[,] MakeBoardGame()
         {
-            
+
             //Changing all default values to 10, to ensure only 4 in the middle are coloured in. 
             for (int i = 0; i < ROWS; i++)
             {
@@ -97,10 +97,8 @@ namespace ONeilloGame
                     }
                 }
             }
-
             return (blackCounters, whiteCounters);
         }
-
 
         public int rowSelect;
         public int colSelect;
@@ -249,8 +247,6 @@ namespace ONeilloGame
             gameBoardArray[row, col] = playerColour; // Set the current player's color
             SetTileForGamePlay(row, col, playerColour); // Assuming SetTileForGamePlay sets the UI or representation
         }
-
-
 
         public void SetTileForGamePlay(int rowSelect, int colSelect, int playerColour)
         {
