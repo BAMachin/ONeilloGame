@@ -14,19 +14,17 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 //TO DO:
 //Check code logic - validate moves
+//if not valid moves at all - notify player
+//who has won the game 
 
-//Speak setting - player placed counter
+//Speak setting - player placed counter row and col only
 
 //JSON File setting - for new and load game
 //Exit game - save if half way through a game prompt
-
 //if there are no saved games - the load button should be disabled
 
-//tile counter 
-//its your turn flipper
-
+//final touches....
 //to make board game square rather than rectangular
-
 //check all variable names
 //check all comment locations and if required
 
@@ -34,6 +32,7 @@ namespace ONeilloGame
 {
     public partial class ONeilloGame : Form
     {
+
         private GameBoardControl gameBoardControl;
         private SpeechSynthesizer synthesizer = new();
 
@@ -44,15 +43,50 @@ namespace ONeilloGame
             gameBoardControl = new GameBoardControl(this);
             this.Controls.Add(gameBoardControl);
 
-            //synthesizer = new SpeechSynthesizer();
-            //gameBoardControl.Enabled = false; // Disable the game board initially
 
-            UpdateCounters(null, EventArgs.Empty); // this is only called once on start up  
-            CheckingWhichTurnItIs(null, EventArgs.Empty); // this is only called once on start up
-            
+            gameBoardControl.PlayerTurnChanged += GameBoardControl_PlayerTurnChanged;
+            gameBoardControl.CountersUpdated += GameBoardControl_CountersUpdated;
+
+            //synthesizer = new SpeechSynthesizer();
 
             informationPanelToolStripMenuItem.Checked = true;
             speakToolStripMenuItem.Checked = false;
+        }
+        //int row = gameBoardControl.RowSelected;
+        //int col = gameBoardControl.ColSelected;
+        //ProvideTilePlacement(row, col); 
+
+        public void ShowPlayerOneTurnLabel()
+        {
+            bottomlabel1Player1Turn.Show();
+            bottomlabel2PlayerTwoTurn.Hide();
+        }
+
+        public void ShowPlayerTwoTurnLabel()
+        {
+            bottomlabel2PlayerTwoTurn.Show();
+            bottomlabel1Player1Turn.Hide();
+        }
+
+        private void GameBoardControl_PlayerTurnChanged(int playerColor)
+        {
+            if (playerColor == 0)
+            {
+                ShowPlayerOneTurnLabel();
+            }
+            else if (playerColor == 1)
+            {
+                ShowPlayerTwoTurnLabel();
+            }
+        }
+
+        private void GameBoardControl_CountersUpdated(int blackCounters, int whiteCounters)
+        {
+            // Update counter labels
+            bottomplayer1Counter.Text = blackCounters.ToString();
+            bottomplayer2Counter.Text = whiteCounters.ToString();
+            bottomplayer1Counter.Refresh();
+            bottomplayer2Counter.Refresh();
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -75,44 +109,6 @@ namespace ONeilloGame
         {
 
         }
-        private void UpdateCounters(object sender, EventArgs e)
-        {
-            //int row = gameBoardControl.RowSelected;
-            //int col = gameBoardControl.ColSelected;
-            //ProvideTilePlacement(row, col); 
-
-            (int blackCounters, int whiteCounters) counts = gameBoardControl.CountTheTilesOnTheBoard();
-
-            string blackCountString = counts.blackCounters.ToString();
-            string whiteCountString = counts.whiteCounters.ToString();
-
-            MessageBox.Show($"black counters: {blackCountString}, white counters: {whiteCountString}");
-            bottomplayer1Counter.Text = blackCountString;
-            bottomplayer2Counter.Text = whiteCountString;
-        }
-
-        public int currentPlayerColour
-        {
-            set { currentPlayerColour = value; }
-        }
-
-        private void CheckingWhichTurnItIs(object sender, EventArgs e)
-        {
-            int currentPlayerColour = gameBoardControl.PlayerColour;
-            string currentPlayerColString = currentPlayerColour.ToString();
-            MessageBox.Show($"currently player is: {currentPlayerColString}"); 
-
-            if (currentPlayerColour == 0) //black counter to go - player 1
-            {
-                bottomlabel1Player1Turn.Show();
-                bottomlabel2PlayerTwoTurn.Hide();
-            }
-            else if (currentPlayerColour == 1) //white counter to go - player 2
-            {
-                bottomlabel2PlayerTwoTurn.Show();
-                bottomlabel1Player1Turn.Hide();
-            }
-        }
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -122,17 +118,17 @@ namespace ONeilloGame
             // Show the aboutForm as a dialog (modal) window
             aboutForm.ShowDialog();
         }
-
         private void startGameBtn_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Let's go! The game has started.");
+            MessageBox.Show("Let's go play the game!");
             bottomtextBoxPlayer1.Enabled = false;
             bottomtextBoxPlayer2.Enabled = false;
 
             bottomstartGameBtn.Enabled = false;
             gameBoardControl.Enabled = true;
-        }
+            ShowPlayerOneTurnLabel();
 
+        }
         private void informationPanelToolStripMenuItem_Click(object sender, EventArgs e)
         {
             informationPanelToolStripMenuItem.Checked = !informationPanelToolStripMenuItem.Checked; // Toggle the checked state
@@ -165,7 +161,6 @@ namespace ONeilloGame
                 bottomlabel1Player1Turn.Show();
             }
         }
-
         private void speakToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //if (!speakToolStripMenuItem.Checked)
@@ -181,17 +176,17 @@ namespace ONeilloGame
             //}
         }
 
-        //private void ProvideTilePlacement(int row, int col)
-        //{
-        //    string placementText = $"The counter has been placed at {row} {col}.";
-        //    // Speak the advice
-        //    Speak(placementText);
-        //}
+        private void ProvideTilePlacement(int row, int col)
+        {
+            string placementText = $"The counter has been placed at {row} {col}.";
+            // Speak the advice
+            Speak(placementText);
+        }
 
-        //private void Speak(string placementText)
-        //{
-        //    synthesizer.SpeakAsync(placementText);
-        //}
+        private void Speak(string placementText)
+        {
+            synthesizer.SpeakAsync(placementText);
+        }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -211,6 +206,11 @@ namespace ONeilloGame
                 //prompt the user to save the game 
                 //message box with save game button and save to json file
             }
+        }
+
+        private void menuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+
         }
     }
 }

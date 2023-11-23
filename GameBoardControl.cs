@@ -1,8 +1,10 @@
 ﻿using GameboardGUI;
 using System.Diagnostics.Eventing.Reader;
+using System.Reflection.Emit;
 using System.Security.AccessControl;
 using System.Security.Cryptography.X509Certificates;
 using System.Windows.Forms;
+using static System.Windows.Forms.DataFormats;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
 
@@ -16,10 +18,18 @@ namespace ONeilloGame
         const int COLUMNS = 8;
         const int ROWS = 8;
 
+        public delegate void PlayerTurnChangedEventHandler(int playerColor);
+        public event PlayerTurnChangedEventHandler PlayerTurnChanged;
+
+        public delegate void CountersUpdatedEventHandler(int blackCounters, int whiteCounters);
+        public event CountersUpdatedEventHandler CountersUpdated;
+
+
         //Returning the array that makes up the board.
         int[,] gameBoardArray = new int[ROWS, COLUMNS];
 
         GameboardImageArray gameboardGui;
+        
         public int[,] gameboardCoords;
         string imagePath = "Resources/";
         private int playerColour = 0;
@@ -45,7 +55,6 @@ namespace ONeilloGame
                 this.gameboardGui = new GameboardImageArray(parent, gameboardCoords, topCorner, bottomCorner, tileMargin, imagePath);
                 gameboardGui.UpdateBoardGui(gameboardCoords);
                 gameboardGui.TileClicked += new GameboardImageArray.TileClickedEventDelegate(GameTileClicked);
-                CountTheTilesOnTheBoard(); //does it when board is first set up
             }
             catch (Exception ex)
             {
@@ -57,7 +66,6 @@ namespace ONeilloGame
 
         public int[,] MakeBoardGame()
         {
-
             //Changing all default values to 10, to ensure only 4 in the middle are coloured in. 
             for (int i = 0; i < ROWS; i++)
             {
@@ -75,8 +83,7 @@ namespace ONeilloGame
 
             return gameBoardArray;
         }
-
-        public (int blackCounters, int whiteCounters) CountTheTilesOnTheBoard()
+        private void CountTheTilesOnTheBoard()
         {
             int blackCounters = 0;
             int whiteCounters = 0;
@@ -97,7 +104,7 @@ namespace ONeilloGame
                     }
                 }
             }
-            return (blackCounters, whiteCounters);
+                        CountersUpdated?.Invoke(blackCounters, whiteCounters);
         }
 
         public int rowSelect;
@@ -125,18 +132,18 @@ namespace ONeilloGame
             MessageBox.Show($"{colSelect}, {rowSelect} has been clicked");
 
             bool isValidMove = CheckSurroundingTiles(rowSelect, colSelect, playerColour, gameBoardArray);
+
             if (isValidMove)
             {
                 //Moves have been made
                 CountTheTilesOnTheBoard();
                 SwitchPlayerColour();
-                MessageBox.Show($"player {playerColour} now playing");
-                
             }
             else
             {
                 //the move isn't valid
-                MessageBox.Show("Back into game tile clicked meth - Move not valid");
+                MessageBox.Show("Move not valid");
+                //not part of spec to have an indication anyway
             }
             
         }
@@ -253,14 +260,14 @@ namespace ONeilloGame
             //tiles are set to the other colour
             string imageName = playerColour.ToString();
             gameboardGui.SetTile(rowSelect, colSelect, imageName);
-            
-
         }
+
         private void SwitchPlayerColour()
         {
             playerColour = (playerColour == 0) ? 1 : 0;
-        }
 
+            PlayerTurnChanged?.Invoke(playerColour);
+        }
         private void ONeilloGame_Load(object sender, EventArgs e)
         {
 

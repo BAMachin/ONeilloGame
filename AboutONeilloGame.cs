@@ -15,6 +15,7 @@ namespace ONeilloGame
         public AboutONeilloGame()
         {
             InitializeComponent();
+            button1.Text = "OK";
         }
 
         private void label1_Click(object sender, EventArgs e)
