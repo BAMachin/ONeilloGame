@@ -4,6 +4,7 @@ using System.Reflection.Emit;
 using System.Security.AccessControl;
 using System.Security.Cryptography.X509Certificates;
 using System.Windows.Forms;
+using static ONeilloGame.GameDataJson;
 using static System.Windows.Forms.DataFormats;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
@@ -23,6 +24,9 @@ namespace ONeilloGame
 
         public delegate void CountersUpdatedEventHandler(int blackCounters, int whiteCounters);
         public event CountersUpdatedEventHandler CountersUpdated;
+
+        public delegate void TilePlacedEventHandler(int row, int col);
+        public event TilePlacedEventHandler rowColValueSent;
 
 
         //Returning the array that makes up the board.
@@ -113,13 +117,11 @@ namespace ONeilloGame
         public int RowSelected
         {
             get { return rowSelect; }
-            set { rowSelect = value; }
         }
 
         public int ColSelected
         {
             get { return colSelect; }
-            set { colSelect = value; }
         }
 
         private void GameTileClicked(object sender, EventArgs e)
@@ -141,7 +143,7 @@ namespace ONeilloGame
             }
             else
             {
-                //the move isn't valid
+                //the move isn't valid and no move has been made
                 MessageBox.Show("Move not valid");
                 //not part of spec to have an indication anyway
             }
@@ -231,6 +233,11 @@ namespace ONeilloGame
             {
                 UpdateTiles(tileCoordinatesToFlip, row, col, gameBoardArray);
             }
+            else
+            {
+                MessageBox.Show($"Current player doesn't have any valid moves!");
+                SwitchPlayerColour(); 
+            }
 
             return isValidMove;
         }
@@ -260,6 +267,7 @@ namespace ONeilloGame
             //tiles are set to the other colour
             string imageName = playerColour.ToString();
             gameboardGui.SetTile(rowSelect, colSelect, imageName);
+            rowColValueSent?.Invoke(rowSelect, colSelect);
         }
 
         private void SwitchPlayerColour()
