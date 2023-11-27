@@ -28,7 +28,6 @@ namespace ONeilloGame
         public delegate void TilePlacedEventHandler(int row, int col);
         public event TilePlacedEventHandler rowColValueSent;
 
-
         //Returning the array that makes up the board.
         int[,] gameBoardArray = new int[ROWS, COLUMNS];
 
@@ -126,7 +125,6 @@ namespace ONeilloGame
 
         private void GameTileClicked(object sender, EventArgs e)
         {
-
             //Gets the value within the array that was selected
             int colSelect = gameboardGui.GetCurrentColumnIndex(sender);
             int rowSelect = gameboardGui.GetCurrentRowIndex(sender);
@@ -145,7 +143,6 @@ namespace ONeilloGame
             {
                 //the move isn't valid and no move has been made
                 MessageBox.Show("Move not valid");
-                //not part of spec to have an indication anyway
             }
             
         }
@@ -233,11 +230,13 @@ namespace ONeilloGame
             {
                 UpdateTiles(tileCoordinatesToFlip, row, col, gameBoardArray);
             }
-            else
-            {
-                MessageBox.Show($"Current player doesn't have any valid moves!");
-                SwitchPlayerColour(); 
-            }
+            //else
+            //{
+            //    MessageBox.Show("No valid moves on the board, skipping turn");
+            //    CountTheTilesOnTheBoard();
+            //    SwitchPlayerColour();
+            //}
+
 
             return isValidMove;
         }

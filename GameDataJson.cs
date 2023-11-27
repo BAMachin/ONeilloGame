@@ -1,48 +1,50 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
-using System.Xml.Linq;
 using Newtonsoft.Json;
 using ONeilloGame.Properties;
 
 namespace ONeilloGame
 {
-    internal class GameDataJson
+    public class GameDataJson
     {
+        private const string FilePath = "game_data.json";
+
         public class Composite
         {
-            public Settings settings { get; set; }
-            public Gdata gdata { get; set; }
-            public IDictionary<string, Gdata> data { get; set; }
+            //public Settings Settings { get; set; }
+            public Gdata Gdata { get; set; }
+            public IDictionary<string, Gdata> Data { get; set; }
         }
 
-        internal class Gdata
+        public class Gdata
         {
-            public int[,] gameBoardArray { get; set; }
-
+            public int[,] GameBoardArray { get; set; }
         }
 
-        internal class PlayerDataAndCounters
+        public class PlayerDataAndCounters
         {
-            public string player1Name { get; set; }
-            public string player2Name { get; set; } 
-
-            public int blackCounters { get; set; }
-            public int whiteCounters { get; set; }
-
+            public string Player1Name { get; set; }
+            public string Player2Name { get; set; }
+            public int BlackCounters { get; set; }
+            public int WhiteCounters { get; set; }
         }
 
-        public void SaveGameData()
+        public void SaveGameData(Composite compositeToSerialize, string filePath = FilePath)
         {
-            Composite compositeToSerialize = new Composite();
-            // Initialize your composite data here
-
             string stringComposite = JsonConvert.SerializeObject(compositeToSerialize, Formatting.Indented);
-            File.WriteAllText("example.json", stringComposite);
+            File.WriteAllText(filePath, stringComposite);
         }
 
-        public Composite LoadGameData()
+        public Composite LoadGameData(string filePath = FilePath)
         {
-            string stringComposite = File.ReadAllText("example.json");
+            if (!File.Exists(filePath))
+            {
+                // Handle the case where the file doesn't exist
+                throw new FileNotFoundException($"File not found: {filePath}");
+            }
+
+            string stringComposite = File.ReadAllText(filePath);
             Composite deserializedComposite = JsonConvert.DeserializeObject<Composite>(stringComposite);
             return deserializedComposite;
         }

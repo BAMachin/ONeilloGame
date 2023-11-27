@@ -49,6 +49,7 @@
             bottomplayer2Counter = new Label();
             bottomstartGameBtn = new Button();
             bottomlabel1Player1Turn = new Label();
+            loadGameToolStripMenuItem = new ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)bottompictureBox1).BeginInit();
             menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)bottompictureBox2).BeginInit();
@@ -78,7 +79,7 @@
             // 
             // gameToolStripMenuItem
             // 
-            gameToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { newGameToolStripMenuItem, saveGameToolStripMenuItem, exitToolStripMenuItem });
+            gameToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { newGameToolStripMenuItem, loadGameToolStripMenuItem, saveGameToolStripMenuItem, exitToolStripMenuItem });
             gameToolStripMenuItem.Name = "gameToolStripMenuItem";
             gameToolStripMenuItem.Size = new Size(50, 20);
             gameToolStripMenuItem.Text = "Game";
@@ -113,14 +114,14 @@
             // speakToolStripMenuItem
             // 
             speakToolStripMenuItem.Name = "speakToolStripMenuItem";
-            speakToolStripMenuItem.Size = new Size(169, 22);
+            speakToolStripMenuItem.Size = new Size(180, 22);
             speakToolStripMenuItem.Text = "Speak";
             speakToolStripMenuItem.Click += speakToolStripMenuItem_Click;
             // 
             // informationPanelToolStripMenuItem
             // 
             informationPanelToolStripMenuItem.Name = "informationPanelToolStripMenuItem";
-            informationPanelToolStripMenuItem.Size = new Size(169, 22);
+            informationPanelToolStripMenuItem.Size = new Size(180, 22);
             informationPanelToolStripMenuItem.Text = "Information Panel";
             informationPanelToolStripMenuItem.Click += informationPanelToolStripMenuItem_Click;
             // 
@@ -254,6 +255,13 @@
             bottomlabel1Player1Turn.Text = "Player 1 to go!";
             bottomlabel1Player1Turn.Visible = false;
             // 
+            // loadGameToolStripMenuItem
+            // 
+            loadGameToolStripMenuItem.Name = "loadGameToolStripMenuItem";
+            loadGameToolStripMenuItem.Size = new Size(180, 22);
+            loadGameToolStripMenuItem.Text = "Load Game";
+            loadGameToolStripMenuItem.Click += loadGameToolStripMenuItem_Click;
+            // 
             // ONeilloGame
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -309,5 +317,6 @@
         public Label bottomplayer2Counter;
         private Button bottomstartGameBtn;
         private Label bottomlabel1Player1Turn;
+        private ToolStripMenuItem loadGameToolStripMenuItem;
     }
 }

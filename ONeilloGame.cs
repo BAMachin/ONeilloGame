@@ -15,10 +15,7 @@ using static ONeilloGame.GameDataJson;
 
 //TO DO:
 //Check code logic - validate moves
-//if not valid moves at all - notify player
-//who has won the game 
-
-//Speak setting - player placed counter row and col only - set to null but unsure why??
+//if there are no valid moves at all - notify the player and switch to the other player
 
 //JSON File setting - for new and load game
 //Exit game - save if half way through a game prompt
@@ -34,47 +31,44 @@ namespace ONeilloGame
     public partial class ONeilloGame : Form
     {
         private GameBoardControl gameBoardControl;
-
         private SpeechSynthesizer synth;
 
         private PlayerDataAndCounters playerData = new PlayerDataAndCounters();
 
-        //private SpeechSynthesizer synthesizer = new();
+        private GameDataJson gameDataJson;
+
         public ONeilloGame()
         {
             InitializeComponent();
+
             gameBoardControl = new GameBoardControl(this);
             this.Controls.Add(gameBoardControl);
+            synth = new SpeechSynthesizer();
 
             gameBoardControl.PlayerTurnChanged += GameBoardControl_PlayerTurnChanged;
             gameBoardControl.CountersUpdated += GameBoardControl_CountersUpdated;
 
-            //gameBoardControl.rowColValueSent += GameBoardControl_RowColValueSent;
-
             informationPanelToolStripMenuItem.Checked = true;
             speakToolStripMenuItem.Checked = false;
-            synth = new SpeechSynthesizer();
-
+            
+            gameDataJson = new GameDataJson();
         }
 
-        //private void GameBoardControl_RowColValueSent(int row, int col)
-        //{
-        //    ProvideTilePlacement(row, col);
-        //}
-
-
+        private void GameBoardControl_RowColValueSent(int row, int col)
+        {
+            //MessageBox.Show($"GameBoardControl_RowColValueSent: {row}, {col}");
+            ProvideTilePlacement(row, col);
+        }
         public void ShowPlayerOneTurnLabel()
         {
             bottomlabel1Player1Turn.Show();
             bottomlabel2PlayerTwoTurn.Hide();
         }
-
         public void ShowPlayerTwoTurnLabel()
         {
             bottomlabel2PlayerTwoTurn.Show();
             bottomlabel1Player1Turn.Hide();
         }
-
         private void GameBoardControl_PlayerTurnChanged(int playerColor)
         {
             if (playerColor == 0)
@@ -114,7 +108,6 @@ namespace ONeilloGame
         {
 
         }
-
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Create an instance of the AboutONeilloGame form
@@ -171,36 +164,37 @@ namespace ONeilloGame
         }
         private void speakToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            speakToolStripMenuItem.Checked = !speakToolStripMenuItem.Checked; // Toggle the checked state
+            speakToolStripMenuItem.Checked = !speakToolStripMenuItem.Checked;
 
             if (speakToolStripMenuItem.Checked)
             {
+                gameBoardControl.rowColValueSent += GameBoardControl_RowColValueSent;
                 MessageBox.Show($"Speak setting has been switched on");
-                //Debug.WriteLine($"Before calling Speak. Synthesizer: {synthesizer}");
             }
         }
+        private void ProvideTilePlacement(int row, int col)
+        {
+            string rowString = row.ToString();
+            string colString = col.ToString();
 
-        //private void ProvideTilePlacement(int row, int col)
-        //{
-        //    string rowString = row.ToString(); 
-        //    string colString = col.ToString();
-        //    string textToSpeak = $"The counter has been placed at {rowString} {colString}.";
-        //    // Speak the row and col selected
-        //    Speak(textToSpeak);
-        //}
+            string textToSpeak = $"The counter has been placed at {rowString} {colString}";
 
-        //private void Speak(string textToSpeak)
-        //{
-        //    if (synth != null && speakToolStripMenuItem.Checked) //initialised and checked on the menu
-        //    {
-        //        synth.SpeakAsync(textToSpeak);
-        //    }
-        //    else
-        //    {
-        //        // Log or handle the case where synthesizer is null or speaking is turned off
-        //        Debug.WriteLine("SpeechSynthesizer is not initialized or speaking is turned off");
-        //    }
-        //}
+            //MessageBox.Show("TEXT TO SPEAK: " + textToSpeak);
+            
+            Speak(textToSpeak);
+        }
+
+        private void Speak(string textToSpeak)
+        {
+            if (synth != null && speakToolStripMenuItem.Checked)
+            {
+                synth.SpeakAsync(textToSpeak);
+            }
+            else
+            {
+                Debug.WriteLine("SpeechSynthesizer is not initialized or speaking is turned off");
+            }
+        }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -230,7 +224,7 @@ namespace ONeilloGame
         private void saveGameToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Save game has been clicked
-            using (SaveGame saveGameForm = new SaveGame())
+            using (SaveGame saveGameForm = new SaveGame(gameDataJson)) // Pass the instance of GameDataJson
             {
                 if (saveGameForm.ShowDialog() == DialogResult.OK)
                 {
@@ -244,14 +238,13 @@ namespace ONeilloGame
                 // else: The user canceled the operation
             }
         }
+
         private void SaveGameData(string gameName, int selectedSlot)
         {
             GameDataJson gameData = new GameDataJson();
             GameDataJson.Composite compositeToSave = new GameDataJson.Composite();
-            // Set other game data properties here
 
             // Save the composite to the specified slot
-            // For example, assuming there's an array of composites for different slots
             SaveGameDataToSlot(compositeToSave, selectedSlot);
         }
 
@@ -260,6 +253,22 @@ namespace ONeilloGame
             // Save the composite to the specified slot
             // You might want to manage your game data storage logic here
             // For example, save it to an array or dictionary based on the slot
+        }
+
+        private void loadGameToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // Load the game data
+            GameDataJson.Composite loadedComposite = gameDataJson.LoadGameData();
+
+            if (loadedComposite != null)
+            {
+                // Process the loaded data as needed
+                // For example, update your game state using the loadedComposite object
+            }
+            else
+            {
+                MessageBox.Show("No saved game data found.", "Load Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
     }
 }

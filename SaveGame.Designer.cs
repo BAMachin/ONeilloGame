@@ -46,6 +46,7 @@
             btnSaveGame.TabIndex = 0;
             btnSaveGame.Text = "Save";
             btnSaveGame.UseVisualStyleBackColor = false;
+            btnSaveGame.Click += btnSaveGame_Click;
             // 
             // btnCancel
             // 
