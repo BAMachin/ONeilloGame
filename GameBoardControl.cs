@@ -86,7 +86,7 @@ namespace ONeilloGame
 
             return gameBoardArray;
         }
-        private void CountTheTilesOnTheBoard()
+        private (int blackCounters, int whiteCounters) CountTheTilesOnTheBoard()
         {
             int blackCounters = 0;
             int whiteCounters = 0;
@@ -108,6 +108,7 @@ namespace ONeilloGame
                 }
             }
                         CountersUpdated?.Invoke(blackCounters, whiteCounters);
+            return (blackCounters, whiteCounters);
         }
 
         public int rowSelect;
@@ -125,31 +126,99 @@ namespace ONeilloGame
 
         private void GameTileClicked(object sender, EventArgs e)
         {
-            //Gets the value within the array that was selected
+            // Gets the value within the array that was selected
             int colSelect = gameboardGui.GetCurrentColumnIndex(sender);
             int rowSelect = gameboardGui.GetCurrentRowIndex(sender);
 
             MessageBox.Show($"{colSelect}, {rowSelect} has been clicked");
 
-            bool isValidMove = CheckSurroundingTiles(rowSelect, colSelect, playerColour, gameBoardArray);
+            // Declare and initialize tileCoordinatesToFlip
+            List<int> tileCoordinatesToFlip = new List<int>();
 
-            if (isValidMove)
+            bool isCurrentMoveValid = CheckSurroundingTiles(rowSelect, colSelect, playerColour, gameBoardArray, tileCoordinatesToFlip);
+
+            if (isCurrentMoveValid)
             {
-                //Moves have been made
+                UpdateTiles(tileCoordinatesToFlip, rowSelect, colSelect, gameBoardArray);
                 CountTheTilesOnTheBoard();
                 SwitchPlayerColour();
             }
             else
             {
-                //the move isn't valid and no move has been made
-                MessageBox.Show("Move not valid");
+                // The move isn't valid and no move has been made
+                MessageBox.Show("Move not valid, checking if there are any valid moves on the board");
+
+                // Now to check the entire board
+                bool foundValidMoveOnEntireBoard = false;
+
+                // Iterate through each cell on the game board
+                for (int row = 0; row < ROWS; row++)
+                {
+                    for (int col = 0; col < COLUMNS; col++)
+                    {
+                        if (CheckSurroundingTiles(row, col, playerColour, gameBoardArray, tileCoordinatesToFlip))
+                        {
+                            foundValidMoveOnEntireBoard = true;
+                            break; // Break out of the loop if any valid move is found
+                        }
+                    }
+
+                    if (foundValidMoveOnEntireBoard)
+                        break; // Break out of the outer loop if any valid move is found
+                }
+
+                // Check if at least one valid move was found
+                if (!foundValidMoveOnEntireBoard)
+                {
+                    // No valid moves found on the board for the current player
+                    // Check if there are valid moves for the other player
+                    bool foundValidMoveForOtherPlayer = false;
+
+                    // Iterate through each cell on the game board
+                    for (int row = 0; row < ROWS; row++)
+                    {
+                        for (int col = 0; col < COLUMNS; col++)
+                        {
+                            if (CheckSurroundingTiles(row, col, 1 - playerColour, gameBoardArray, tileCoordinatesToFlip))
+                            {
+                                foundValidMoveForOtherPlayer = true;
+                                break; // Break out of the loop if any valid move is found for the other player
+                            }
+                        }
+
+                        if (foundValidMoveForOtherPlayer)
+                            break; // Break out of the outer loop if any valid move is found for the other player
+                    }
+
+                    if (!foundValidMoveForOtherPlayer)
+                    {
+                        // Call the method and get the counts
+                        var counters = CountTheTilesOnTheBoard();
+                        int blackCounters = counters.blackCounters;
+                        int whiteCounters = counters.whiteCounters;
+
+                        // Display a message saying the game is finished
+                        MessageBox.Show($"Game Finished!\n\nPlayer 1 Count: {blackCounters}\nPlayer 2 Count: {whiteCounters}");
+                    }
+                    else
+                    {
+                        // There are still valid moves for the other player
+                        MessageBox.Show("No valid moves found on the board for the current player, player switch");
+                        SwitchPlayerColour();
+                    }
+                }
+                else
+                {
+                    // There are valid moves for the current player, they need to choose another tile
+                    MessageBox.Show("Valid moves found, please select another tile to place");
+                }
             }
-            
         }
-        public bool CheckSurroundingTiles(int row, int col, int playerColour, int[,] gameBoardArray)
+
+
+        public bool CheckSurroundingTiles(int row, int col, int playerColour, int[,] gameBoardArray, List<int> tileCoordinatesToFlip)
         {
             bool isValidMove = false;
-            List<int> tileCoordinatesToFlip = new List<int>();
 
             int[] dx = { -1, -1, -1, 0, 0, 1, 1, 1 };
             int[] dy = { -1, 0, 1, -1, 1, -1, 0, 1 };
@@ -159,41 +228,27 @@ namespace ONeilloGame
                 int x = row + dx[dir];
                 int y = col + dy[dir];
 
-                List<int> tileValuesWithinCircumference = new List<int>();
                 List<int> currentDirectionTilesToFlip = new List<int>();
-
-                int opponentsColour = (playerColour == 0) ? 1 : 0;
-                bool foundOpponent = false;
 
                 while (x >= 0 && x < gameBoardArray.GetLength(0) && y >= 0 && y < gameBoardArray.GetLength(1))
                 {
                     int tileValue = gameBoardArray[x, y];
-                    tileValuesWithinCircumference.Add(tileValue);
 
-                    if (tileValue == opponentsColour)
-                    {
-                        foundOpponent = true;
-                        currentDirectionTilesToFlip.Add(x * 100 + y);
-
-                        // Check if the opponent is sandwiched by the current player's counters
-                        if (x - dx[dir] >= 0 && x - dx[dir] < gameBoardArray.GetLength(0) &&
-                            y - dy[dir] >= 0 && y - dy[dir] < gameBoardArray.GetLength(1) &&
-                            gameBoardArray[x - dx[dir], y - dy[dir]] == playerColour)
-                        {
-                            // Valid move condition for the edge
-                            isValidMove = true;
-                            tileCoordinatesToFlip.AddRange(currentDirectionTilesToFlip);
-                            break;
-                        }
-                    }
-                    else if (tileValue == playerColour && foundOpponent)
+                    if (tileValue == playerColour)
                     {
                         // Opponent's color found, and there is at least one opponent's piece in between
-                        isValidMove = true;
-                        tileCoordinatesToFlip.AddRange(currentDirectionTilesToFlip);
+                        if (currentDirectionTilesToFlip.Count > 0)
+                        {
+                            isValidMove = true;
+                            tileCoordinatesToFlip.AddRange(currentDirectionTilesToFlip);
+                        }
                         break;
                     }
-                    else if (tileValue == 0 || !foundOpponent) // Break if empty tile or no opponent found
+                    else if (tileValue == 1 - playerColour) // Opponent's color
+                    {
+                        currentDirectionTilesToFlip.Add(x * 100 + y);
+                    }
+                    else if (tileValue == 0) // Empty tile
                     {
                         break;
                     }
@@ -201,45 +256,23 @@ namespace ONeilloGame
                     x += dx[dir];
                     y += dy[dir];
                 }
-            }
 
-            // Check if the move is at the top or bottom row
-            if ((row == 0 || row == gameBoardArray.GetLength(0) - 1) && isValidMove)
-            {
-                // Check for sandwich conditions for the top or bottom row
-                int oppositeColour = (playerColour == 0) ? 1 : 0;
-
-                // Check for the sandwich condition above the current position
-                if (row > 0 && gameBoardArray[row - 1, col] == oppositeColour &&
-                    row < gameBoardArray.GetLength(0) - 2 && gameBoardArray[row + 2, col] == playerColour)
+                // Check if the move is at the top or bottom row and the sandwich conditions are met
+                if ((row == 0 || row == gameBoardArray.GetLength(0) - 1) &&
+                    row + 2 * dx[dir] >= 0 && row + 2 * dx[dir] < gameBoardArray.GetLength(0) &&
+                    col + 2 * dy[dir] >= 0 && col + 2 * dy[dir] < gameBoardArray.GetLength(1) &&
+                    gameBoardArray[row + 2 * dx[dir], col + 2 * dy[dir]] == playerColour &&
+                    gameBoardArray[row + dx[dir], col + dy[dir]] == 1 - playerColour)
                 {
-                    // Valid move condition for the sandwich
-                    tileCoordinatesToFlip.Add((row - 1) * 100 + col); // Add the opponent's tile to flip
-                }
-
-                // Check for the sandwich condition below the current position
-                if (row < gameBoardArray.GetLength(0) - 2 && gameBoardArray[row + 1, col] == oppositeColour &&
-                    row > 0 && gameBoardArray[row - 2, col] == playerColour)
-                {
-                    // Valid move condition for the sandwich
-                    tileCoordinatesToFlip.Add((row + 1) * 100 + col); // Add the opponent's tile to flip
+                    isValidMove = true;
+                    tileCoordinatesToFlip.Add((row + dx[dir]) * 100 + col + dy[dir]); // Add the opponent's tile to flip
                 }
             }
-
-            if (isValidMove)
-            {
-                UpdateTiles(tileCoordinatesToFlip, row, col, gameBoardArray);
-            }
-            //else
-            //{
-            //    MessageBox.Show("No valid moves on the board, skipping turn");
-            //    CountTheTilesOnTheBoard();
-            //    SwitchPlayerColour();
-            //}
-
 
             return isValidMove;
         }
+
+
 
         public void UpdateTiles(List<int> tileCoordinatesToFlip, int rowSelect, int colSelect, int[,] gameBoardArray)
         {

@@ -15,9 +15,8 @@ using static ONeilloGame.GameDataJson;
 
 //TO DO:
 //Check code logic - validate moves
-//if there are no valid moves at all - notify the player and switch to the other player
 
-//JSON File setting - for new and load game
+//JSON File setting - for save and load game
 //Exit game - save if half way through a game prompt
 //if there are no saved games - the load button should be disabled
 
@@ -31,6 +30,7 @@ namespace ONeilloGame
     public partial class ONeilloGame : Form
     {
         private GameBoardControl gameBoardControl;
+
         private SpeechSynthesizer synth;
 
         private PlayerDataAndCounters playerData = new PlayerDataAndCounters();
@@ -50,7 +50,7 @@ namespace ONeilloGame
 
             informationPanelToolStripMenuItem.Checked = true;
             speakToolStripMenuItem.Checked = false;
-            
+
             gameDataJson = new GameDataJson();
         }
 
@@ -180,10 +180,9 @@ namespace ONeilloGame
             string textToSpeak = $"The counter has been placed at {rowString} {colString}";
 
             //MessageBox.Show("TEXT TO SPEAK: " + textToSpeak);
-            
+
             Speak(textToSpeak);
         }
-
         private void Speak(string textToSpeak)
         {
             if (synth != null && speakToolStripMenuItem.Checked)
@@ -205,14 +204,31 @@ namespace ONeilloGame
             if (result == DialogResult.Yes)
             {
                 this.Close();
-                message = "Remember to save your game";
+                message = "Do you want to save your game before closing?";
                 title = "Close Window";
                 MessageBox.Show(message, title);
+
+                if (result == DialogResult.Yes)
+                {
+                    using (SaveGame saveGameForm = new SaveGame(gameDataJson))
+                    {
+                        if (saveGameForm.ShowDialog() == DialogResult.OK)
+                        {
+                            string gameName = saveGameForm.GameName;
+                            int selectedSlot = saveGameForm.SelectedSlot;
+
+                            SaveGameData(gameName, selectedSlot);
+                        }
+                    }
+                }
+                else if (result == DialogResult.No)
+                {
+                    this.Close();
+                }
             }
             else
             {
-                //prompt the user to save the game 
-                //message box with save game button and save to json file
+
             }
         }
 
@@ -224,25 +240,24 @@ namespace ONeilloGame
         private void saveGameToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Save game has been clicked
-            using (SaveGame saveGameForm = new SaveGame(gameDataJson)) // Pass the instance of GameDataJson
+            using (SaveGame saveGameForm = new SaveGame(gameDataJson))
             {
                 if (saveGameForm.ShowDialog() == DialogResult.OK)
                 {
-                    // Save the game using the provided information (name and slot)
                     string gameName = saveGameForm.GameName;
                     int selectedSlot = saveGameForm.SelectedSlot;
 
-                    // Call the method to save the game with the provided information
                     SaveGameData(gameName, selectedSlot);
                 }
-                // else: The user canceled the operation
             }
         }
 
         private void SaveGameData(string gameName, int selectedSlot)
         {
             GameDataJson gameData = new GameDataJson();
-            GameDataJson.Composite compositeToSave = new GameDataJson.Composite();
+
+            // Load existing data before saving
+            GameDataJson.Composite compositeToSave = gameData.LoadGameData();
 
             // Save the composite to the specified slot
             SaveGameDataToSlot(compositeToSave, selectedSlot);
@@ -252,7 +267,7 @@ namespace ONeilloGame
         {
             // Save the composite to the specified slot
             // You might want to manage your game data storage logic here
-            // For example, save it to an array or dictionary based on the slot
+            // For example, save it to an array or dictionary based on the slot which is a list
         }
 
         private void loadGameToolStripMenuItem_Click(object sender, EventArgs e)

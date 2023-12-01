@@ -33,6 +33,7 @@
             menuStrip1 = new MenuStrip();
             gameToolStripMenuItem = new ToolStripMenuItem();
             newGameToolStripMenuItem = new ToolStripMenuItem();
+            loadGameToolStripMenuItem = new ToolStripMenuItem();
             saveGameToolStripMenuItem = new ToolStripMenuItem();
             exitToolStripMenuItem = new ToolStripMenuItem();
             settingsToolStripMenuItem = new ToolStripMenuItem();
@@ -49,7 +50,6 @@
             bottomplayer2Counter = new Label();
             bottomstartGameBtn = new Button();
             bottomlabel1Player1Turn = new Label();
-            loadGameToolStripMenuItem = new ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)bottompictureBox1).BeginInit();
             menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)bottompictureBox2).BeginInit();
@@ -87,20 +87,27 @@
             // newGameToolStripMenuItem
             // 
             newGameToolStripMenuItem.Name = "newGameToolStripMenuItem";
-            newGameToolStripMenuItem.Size = new Size(180, 22);
+            newGameToolStripMenuItem.Size = new Size(134, 22);
             newGameToolStripMenuItem.Text = "New Game";
+            // 
+            // loadGameToolStripMenuItem
+            // 
+            loadGameToolStripMenuItem.Name = "loadGameToolStripMenuItem";
+            loadGameToolStripMenuItem.Size = new Size(134, 22);
+            loadGameToolStripMenuItem.Text = "Load Game";
+            loadGameToolStripMenuItem.Click += loadGameToolStripMenuItem_Click;
             // 
             // saveGameToolStripMenuItem
             // 
             saveGameToolStripMenuItem.Name = "saveGameToolStripMenuItem";
-            saveGameToolStripMenuItem.Size = new Size(180, 22);
+            saveGameToolStripMenuItem.Size = new Size(134, 22);
             saveGameToolStripMenuItem.Text = "Save Game";
             saveGameToolStripMenuItem.Click += saveGameToolStripMenuItem_Click;
             // 
             // exitToolStripMenuItem
             // 
             exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            exitToolStripMenuItem.Size = new Size(180, 22);
+            exitToolStripMenuItem.Size = new Size(134, 22);
             exitToolStripMenuItem.Text = "Exit";
             exitToolStripMenuItem.Click += exitToolStripMenuItem_Click;
             // 
@@ -114,14 +121,14 @@
             // speakToolStripMenuItem
             // 
             speakToolStripMenuItem.Name = "speakToolStripMenuItem";
-            speakToolStripMenuItem.Size = new Size(180, 22);
+            speakToolStripMenuItem.Size = new Size(169, 22);
             speakToolStripMenuItem.Text = "Speak";
             speakToolStripMenuItem.Click += speakToolStripMenuItem_Click;
             // 
             // informationPanelToolStripMenuItem
             // 
             informationPanelToolStripMenuItem.Name = "informationPanelToolStripMenuItem";
-            informationPanelToolStripMenuItem.Size = new Size(180, 22);
+            informationPanelToolStripMenuItem.Size = new Size(169, 22);
             informationPanelToolStripMenuItem.Text = "Information Panel";
             informationPanelToolStripMenuItem.Click += informationPanelToolStripMenuItem_Click;
             // 
@@ -255,13 +262,6 @@
             bottomlabel1Player1Turn.Text = "Player 1 to go!";
             bottomlabel1Player1Turn.Visible = false;
             // 
-            // loadGameToolStripMenuItem
-            // 
-            loadGameToolStripMenuItem.Name = "loadGameToolStripMenuItem";
-            loadGameToolStripMenuItem.Size = new Size(180, 22);
-            loadGameToolStripMenuItem.Text = "Load Game";
-            loadGameToolStripMenuItem.Click += loadGameToolStripMenuItem_Click;
-            // 
             // ONeilloGame
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -284,6 +284,7 @@
             MaximizeBox = false;
             MinimizeBox = false;
             Name = "ONeilloGame";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "ONeillo Game!";
             Load += UserControl1_Load;
             ((System.ComponentModel.ISupportInitialize)bottompictureBox1).EndInit();

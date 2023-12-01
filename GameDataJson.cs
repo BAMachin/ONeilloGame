@@ -10,6 +10,8 @@ namespace ONeilloGame
     {
         private const string FilePath = "game_data.json";
 
+        public Composite deserializedComposite;
+
         public class Composite
         {
             //public Settings Settings { get; set; }
@@ -45,7 +47,7 @@ namespace ONeilloGame
             }
 
             string stringComposite = File.ReadAllText(filePath);
-            Composite deserializedComposite = JsonConvert.DeserializeObject<Composite>(stringComposite);
+            deserializedComposite = JsonConvert.DeserializeObject<Composite>(stringComposite);
             return deserializedComposite;
         }
     }

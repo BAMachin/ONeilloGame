@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
+
 namespace ONeilloGame
 {
     internal partial class SaveGame : Form
@@ -11,15 +12,19 @@ namespace ONeilloGame
 
         public string GameName { get; private set; }
         public int SelectedSlot { get; private set; }
+        public string Settings { get; private set; }
 
         internal SaveGame(GameDataJson gameDataJson)
         {
             InitializeComponent();
             this.gameDataJson = gameDataJson;
 
-            // Set default values if needed
             GameName = $"ONellio Game - {DateTime.Now:yyyy-MM-dd HH:mm:ss}";
             SelectedSlot = 0; // Set a default slot index
+
+            // Display default values in UI
+            txtBoxGameName.Text = GameName;
+            comboBoxGameSlotChoice.SelectedIndex = SelectedSlot;
         }
 
         private void btnSaveGame_Click(object sender, EventArgs e)
@@ -52,7 +57,6 @@ namespace ONeilloGame
             Close();
         }
 
-        // Event handler for the Cancel button
         private void btnCancel_Click(object sender, EventArgs e)
         {
             // Close the form without saving
