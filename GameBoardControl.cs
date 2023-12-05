@@ -10,7 +10,6 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
 
 //The gameboard logic
-//Add in something to count how many counters each turn
 
 namespace ONeilloGame
 {
@@ -32,7 +31,7 @@ namespace ONeilloGame
         int[,] gameBoardArray = new int[ROWS, COLUMNS];
 
         GameboardImageArray gameboardGui;
-        
+
         public int[,] gameboardCoords;
         string imagePath = "Resources/";
         private int playerColour = 0;
@@ -42,6 +41,13 @@ namespace ONeilloGame
         {
             get { return playerColour; }
         }
+
+        public int[,] GameBoardArray
+        {
+            get { return gameBoardArray; }
+            set { gameBoardArray = value; }
+        }
+
 
         public GameBoardControl(Form parent) //Pulling in the parent form before code runs
         {
@@ -65,6 +71,11 @@ namespace ONeilloGame
                 MessageBox.Show("An error with the game occurred: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 parent.Close();
             }
+        }
+
+        public void RefreshBoard()
+        {
+            MakeBoardGame();
         }
 
         public int[,] MakeBoardGame()
@@ -107,7 +118,7 @@ namespace ONeilloGame
                     }
                 }
             }
-                        CountersUpdated?.Invoke(blackCounters, whiteCounters);
+            CountersUpdated?.Invoke(blackCounters, whiteCounters);
             return (blackCounters, whiteCounters);
         }
 
@@ -130,7 +141,7 @@ namespace ONeilloGame
             int colSelect = gameboardGui.GetCurrentColumnIndex(sender);
             int rowSelect = gameboardGui.GetCurrentRowIndex(sender);
 
-            MessageBox.Show($"{colSelect}, {rowSelect} has been clicked");
+            //MessageBox.Show($"{colSelect}, {rowSelect} has been clicked");
 
             // Declare and initialize tileCoordinatesToFlip
             List<int> tileCoordinatesToFlip = new List<int>();

@@ -26,18 +26,18 @@
         {
             SuspendLayout();
             // 
-            // ONeilloGame
+            // GameBoardControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(784, 761);
-            Name = "ONeilloGame";
-            Text = "ONeillo Game!";
+            BorderStyle = BorderStyle.Fixed3D;
+            Name = "GameBoardControl";
+            Size = new Size(780, 780);
             ResumeLayout(false);
         }
 
         #endregion
 
-        
+
     }
 }

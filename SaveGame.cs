@@ -12,7 +12,8 @@ namespace ONeilloGame
 
         public string GameName { get; private set; }
         public int SelectedSlot { get; private set; }
-        public string Settings { get; private set; }
+
+        //public string Settings { get; private set; }
 
         internal SaveGame(GameDataJson gameDataJson)
         {
@@ -20,6 +21,13 @@ namespace ONeilloGame
             this.gameDataJson = gameDataJson;
 
             GameName = $"ONellio Game - {DateTime.Now:yyyy-MM-dd HH:mm:ss}";
+
+            // Populate the ComboBox with available slots
+            for (int i = 1; i <= 5; i++)
+            {
+                comboBoxGameSlotChoice.Items.Add($"Game Slot: {i}");
+            }
+
             SelectedSlot = 0; // Set a default slot index
 
             // Display default values in UI
@@ -27,7 +35,14 @@ namespace ONeilloGame
             comboBoxGameSlotChoice.SelectedIndex = SelectedSlot;
         }
 
-        private void btnSaveGame_Click(object sender, EventArgs e)
+        public void btnSaveGame_Click(object sender, EventArgs e)
+        {
+            SavingLogic();
+            DialogResult = DialogResult.OK;
+            Close();
+        }
+
+        public void SavingLogic()
         {
             // Validate input
             if (string.IsNullOrWhiteSpace(txtBoxGameName.Text))
@@ -42,20 +57,20 @@ namespace ONeilloGame
                 return;
             }
 
-            // Set properties and close the form
-            GameDataJson.Composite compositeToSave = new GameDataJson.Composite
-            {
-                //Settings = new Settings(),
-                Gdata = new GameDataJson.Gdata(),
-                Data = new Dictionary<string, GameDataJson.Gdata>()
-            };
+            // Get the current game data
+            GameDataJson.Composite compositeToSave = gameDataJson.DeserializedComposite;
 
-            // Save the game data
+            // Save the game data to the selected slot
+            string selectedSlotName = $"Slot {comboBoxGameSlotChoice.SelectedIndex + 1}";
+            compositeToSave.Data[selectedSlotName] = compositeToSave.Gdata;
+
+            // Update the game name (assuming it's a property in Gdata)
+            compositeToSave.Gdata.GameName = txtBoxGameName.Text;
+
+            // Save the updated data
             gameDataJson.SaveGameData(compositeToSave);
-
-            DialogResult = DialogResult.OK;
-            Close();
         }
+
 
         private void btnCancel_Click(object sender, EventArgs e)
         {

@@ -16,9 +16,13 @@ using static ONeilloGame.GameDataJson;
 //TO DO:
 //Check code logic - validate moves
 
-//JSON File setting - for save and load game
-//Exit game - save if half way through a game prompt
+//JSON File settings 
+//new game
 //if there are no saved games - the load button should be disabled
+//how to make it load the slots 
+//how to make it update the file rather than rewrite
+//retrive game
+
 
 //final touches....
 //to make board game square rather than rectangular
@@ -33,7 +37,7 @@ namespace ONeilloGame
 
         private SpeechSynthesizer synth;
 
-        private PlayerDataAndCounters playerData = new PlayerDataAndCounters();
+        private PlayerDataAndCounters PlayerDataAndCounters = new PlayerDataAndCounters();
 
         private GameDataJson gameDataJson;
 
@@ -51,12 +55,14 @@ namespace ONeilloGame
             informationPanelToolStripMenuItem.Checked = true;
             speakToolStripMenuItem.Checked = false;
 
-            gameDataJson = new GameDataJson();
+            gameDataJson = new GameDataJson(gameBoardControl, this);
         }
+
+        private int latestBlackCounters;
+        private int latestWhiteCounters;
 
         private void GameBoardControl_RowColValueSent(int row, int col)
         {
-            //MessageBox.Show($"GameBoardControl_RowColValueSent: {row}, {col}");
             ProvideTilePlacement(row, col);
         }
         public void ShowPlayerOneTurnLabel()
@@ -85,8 +91,30 @@ namespace ONeilloGame
             // Update counter labels
             bottomplayer1Counter.Text = blackCounters.ToString();
             bottomplayer2Counter.Text = whiteCounters.ToString();
+
             bottomplayer1Counter.Refresh();
             bottomplayer2Counter.Refresh();
+
+            // Store the latest values
+            latestBlackCounters = blackCounters;
+            latestWhiteCounters = whiteCounters;
+
+        }
+
+        public PlayerDataAndCounters GetPlayerData()
+        {
+            //text controls
+            string player1Name = bottomtextBoxPlayer1.Text;
+            string player2Name = bottomtextBoxPlayer2.Text;
+
+            // Create and return a PlayerDataAndCounters object
+            return new PlayerDataAndCounters
+            {
+                Player1Name = player1Name,
+                Player2Name = player2Name,
+                BlackCounters = latestBlackCounters,
+                WhiteCounters = latestWhiteCounters
+            };
         }
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
@@ -201,12 +229,12 @@ namespace ONeilloGame
             string title = "Close Window";
             MessageBoxButtons buttons = MessageBoxButtons.YesNo;
             DialogResult result = MessageBox.Show(message, title, buttons);
+
             if (result == DialogResult.Yes)
             {
-                this.Close();
                 message = "Do you want to save your game before closing?";
                 title = "Close Window";
-                MessageBox.Show(message, title);
+                result = MessageBox.Show(message, title, buttons);
 
                 if (result == DialogResult.Yes)
                 {
@@ -217,6 +245,7 @@ namespace ONeilloGame
                             string gameName = saveGameForm.GameName;
                             int selectedSlot = saveGameForm.SelectedSlot;
 
+                            // Pass the SaveGame instance to SaveGameData
                             SaveGameData(gameName, selectedSlot);
                         }
                     }
@@ -226,11 +255,9 @@ namespace ONeilloGame
                     this.Close();
                 }
             }
-            else
-            {
-
-            }
+            // No else clause is needed for the outer DialogResult.Yes check
         }
+
 
         private void menuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
@@ -254,21 +281,26 @@ namespace ONeilloGame
 
         private void SaveGameData(string gameName, int selectedSlot)
         {
-            GameDataJson gameData = new GameDataJson();
+            // Access the current game data
+            GameDataJson.Composite compositeToSave = gameDataJson.DeserializedComposite;
 
-            // Load existing data before saving
-            GameDataJson.Composite compositeToSave = gameData.LoadGameData();
+            // Save the game data to the selected slot
+            string selectedSlotName = $"Slot {selectedSlot}";
+            compositeToSave.Data[selectedSlotName] = compositeToSave.Gdata;
 
-            // Save the composite to the specified slot
-            SaveGameDataToSlot(compositeToSave, selectedSlot);
+            // Update the game name
+            compositeToSave.Gdata.GameName = gameName;
+
+            // Save the updated data
+            gameDataJson.SaveGameData(compositeToSave);
         }
 
-        private void SaveGameDataToSlot(GameDataJson.Composite composite, int slot)
+        private void SaveGameDataToSlot(GameDataJson.Composite composite, string gameName, int slot, SaveGame saveGameForm)
         {
             // Save the composite to the specified slot
-            // You might want to manage your game data storage logic here
-            // For example, save it to an array or dictionary based on the slot which is a list
+            saveGameForm.SavingLogic();
         }
+
 
         private void loadGameToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -277,13 +309,53 @@ namespace ONeilloGame
 
             if (loadedComposite != null)
             {
-                // Process the loaded data as needed
-                // For example, update your game state using the loadedComposite object
+                // Assuming you have instances of Gdata and PlayerDataAndCounters within your GameDataJson class
+                //gameDataJson.Gdata.GameBoardArray = loadedComposite.Gdata.GameBoardArray;
+                //gameDataJson.PlayerDataAndCounters.Player1Name = loadedComposite.Gdata.PlayerData.Player1Name;
+                //gameDataJson.PlayerDataAndCounters.Player2Name = loadedComposite.Gdata.PlayerData.Player2Name;
+                //gameDataJson.PlayerDataAndCounters.BlackCounters = loadedComposite.Gdata.PlayerData.BlackCounters;
+                //gameDataJson.PlayerDataAndCounters.WhiteCounters = loadedComposite.Gdata.PlayerData.WhiteCounters;
             }
             else
             {
                 MessageBox.Show("No saved game data found.", "Load Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
+
+        private void newGameToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DialogResult result = MessageBox.Show("Do you want to save the current game?", "Save Confirmation", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+
+            switch (result)
+            {
+                case DialogResult.Yes:
+                    SaveGame saveGameForm = new SaveGame(gameDataJson);
+                    DialogResult saveResult = saveGameForm.ShowDialog();
+
+                    if (saveResult == DialogResult.OK)
+                    {
+                        // No need to call RefreshBoard here; it will be called at the end of the method
+                    }
+                    else if (saveResult == DialogResult.Cancel)
+                    {
+                        return;
+                    }
+
+                    break;
+                case DialogResult.No:
+                    break;
+                case DialogResult.Cancel:
+                    return;
+            }
+
+            // Dispose the existing control if it exists
+            //gameBoardControl?.Dispose();
+
+            // Create a new instance of GameBoardControl
+            gameBoardControl = new GameBoardControl(this);
+
+            gameBoardControl.RefreshBoard();
+        }
+
     }
 }
