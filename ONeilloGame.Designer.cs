@@ -75,7 +75,7 @@
             menuStrip1.Size = new Size(790, 24);
             menuStrip1.TabIndex = 1;
             menuStrip1.Text = "menuStrip1";
-            menuStrip1.ItemClicked += menuStrip1_ItemClicked;
+            //menuStrip1.ItemClicked += menuStrip1_ItemClicked;
             // 
             // gameToolStripMenuItem
             // 
@@ -176,7 +176,7 @@
             bottomtextBoxPlayer1.Size = new Size(111, 33);
             bottomtextBoxPlayer1.TabIndex = 2;
             bottomtextBoxPlayer1.TextAlign = HorizontalAlignment.Center;
-            bottomtextBoxPlayer1.TextChanged += textBox1_TextChanged;
+            //bottomtextBoxPlayer1.TextChanged += textBox1_TextChanged;
             // 
             // bottompictureBox2
             // 
@@ -197,7 +197,7 @@
             bottompictureBox3.SizeMode = PictureBoxSizeMode.StretchImage;
             bottompictureBox3.TabIndex = 5;
             bottompictureBox3.TabStop = false;
-            bottompictureBox3.Click += pictureBox3_Click;
+            //bottompictureBox3.Click += pictureBox3_Click;
             // 
             // bottomlabel2PlayerTwoTurn
             // 

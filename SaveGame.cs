@@ -60,17 +60,32 @@ namespace ONeilloGame
             // Get the current game data
             GameDataJson.Composite compositeToSave = gameDataJson.DeserializedComposite;
 
-            // Save the game data to the selected slot
-            string selectedSlotName = $"Slot {comboBoxGameSlotChoice.SelectedIndex + 1}";
-            compositeToSave.Data[selectedSlotName] = compositeToSave.Gdata;
+            // Find the index of the selected slot
+            int selectedIndex = comboBoxGameSlotChoice.SelectedIndex;
 
-            // Update the game name (assuming it's a property in Gdata)
-            compositeToSave.Gdata.GameName = txtBoxGameName.Text;
+            // Check if the index is within the range of existing slots
+            if (selectedIndex >= 0 && selectedIndex < compositeToSave.Data.Count)
+            {
+                // Update the game data for the selected slot
+                compositeToSave.Data[selectedIndex].GameName = txtBoxGameName.Text;
+                compositeToSave.Data[selectedIndex].GameBoardArray = compositeToSave.Gdata.GameBoardArray;
+                compositeToSave.Data[selectedIndex].PlayerDataAndCounters = compositeToSave.Gdata.PlayerDataAndCounters;
+            }
+            else
+            {
+                // Add a new game data entry for the selected slot
+                compositeToSave.Data.Add(new GameDataJson.Gdata
+                {
+                    GameName = txtBoxGameName.Text,
+                    GameBoardArray = compositeToSave.Gdata.GameBoardArray,
+                    PlayerDataAndCounters = compositeToSave.Gdata.PlayerDataAndCounters, 
+                    SaveSpace = compositeToSave.Gdata.SaveSpace
+                });
+            }
 
             // Save the updated data
             gameDataJson.SaveGameData(compositeToSave);
         }
-
 
         private void btnCancel_Click(object sender, EventArgs e)
         {

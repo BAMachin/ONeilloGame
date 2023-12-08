@@ -27,6 +27,9 @@ namespace ONeilloGame
         public delegate void TilePlacedEventHandler(int row, int col);
         public event TilePlacedEventHandler rowColValueSent;
 
+        public delegate void BoardResetEventHandler();
+        public event BoardResetEventHandler BoardReset;
+
         //Returning the array that makes up the board.
         int[,] gameBoardArray = new int[ROWS, COLUMNS];
 
@@ -73,9 +76,12 @@ namespace ONeilloGame
             }
         }
 
-        public void RefreshBoard()
+        public void ResetBoard()
         {
-            MakeBoardGame();
+            MakeBoardGame(); //returns the original array with all 10s except 4 middle counters
+            gameboardGui.UpdateBoardGui(gameBoardArray);
+            BoardReset?.Invoke();
+            playerColour = 0; 
         }
 
         public int[,] MakeBoardGame()

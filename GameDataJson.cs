@@ -17,7 +17,6 @@ namespace ONeilloGame
 
         public GameDataJson(GameBoardControl gameBoardControl, ONeilloGame ONeilloGame)
         {
-            // Assuming gameBoardControl is the instance of GameBoardControl you want to work with
             gameBoardControlInstance = gameBoardControl;
             ONeilloGameInstance = ONeilloGame;
         }
@@ -26,35 +25,35 @@ namespace ONeilloGame
         {
             get
             {
-                // Access GameBoardArray through the GameBoardControl instance
                 int[,] gameBoardArray = gameBoardControlInstance.GameBoardArray;
-
 
                 return new Composite
                 {
                     Gdata = new Gdata
                     {
                         GameBoardArray = gameBoardArray,
-                        PlayerDataAndCounters = ONeilloGameInstance.GetPlayerData()//GetPlayerData gets player names and number of counters each
-                    },
-                    Data = new Dictionary<string, Gdata>()
+                        PlayerDataAndCounters = ONeilloGameInstance.GetPlayerData(),
+                        GameName = "ONellio Game - " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+                    }
                 };
             }
         }
 
         public class Composite
         {
-            //public Settings Settings { get; set; }
             public Gdata Gdata { get; set; }
-            public IDictionary<string, Gdata> Data { get; set; }
+            public List<Gdata> Data { get; set; } = new List<Gdata>(); // Initialize as an empty list
         }
+
 
         public class Gdata
         {
             public int[,] GameBoardArray { get; set; }
             public PlayerDataAndCounters PlayerDataAndCounters { get; set; }
             public string GameName { get; set; }
+            public string SaveSpace { get; set; }
         }
+
 
         public class PlayerDataAndCounters
         {
@@ -66,14 +65,12 @@ namespace ONeilloGame
 
         public void SaveGameData(Composite compositeToSerialize, string filePath = FilePath)
         {
-            // Create the directory if it doesn't exist
             string directory = Path.GetDirectoryName(filePath);
             if (!Directory.Exists(directory))
             {
                 Directory.CreateDirectory(directory);
             }
 
-            // Save the game data to the file
             string stringComposite = JsonConvert.SerializeObject(compositeToSerialize, Formatting.Indented);
             File.WriteAllText(filePath, stringComposite);
         }
@@ -82,13 +79,11 @@ namespace ONeilloGame
         {
             if (!File.Exists(filePath))
             {
-                // Handle the case where the file doesn't exist
                 throw new FileNotFoundException($"File not found: {filePath}");
             }
 
             string stringComposite = File.ReadAllText(filePath);
-            deserializedComposite = JsonConvert.DeserializeObject<Composite>(stringComposite);
-            return deserializedComposite;
+            return JsonConvert.DeserializeObject<Composite>(stringComposite);
         }
     }
 }

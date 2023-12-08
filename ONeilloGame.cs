@@ -12,17 +12,12 @@ using System.Diagnostics;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using static ONeilloGame.GameDataJson;
 
-
 //TO DO:
 //Check code logic - validate moves
 
-//JSON File settings 
-//new game
-//if there are no saved games - the load button should be disabled
 //how to make it load the slots 
 //how to make it update the file rather than rewrite
-//retrive game
-
+//loading a game
 
 //final touches....
 //to make board game square rather than rectangular
@@ -51,12 +46,14 @@ namespace ONeilloGame
 
             gameBoardControl.PlayerTurnChanged += GameBoardControl_PlayerTurnChanged;
             gameBoardControl.CountersUpdated += GameBoardControl_CountersUpdated;
+            gameBoardControl.BoardReset += GameBoardControl_BoardReset;
 
             informationPanelToolStripMenuItem.Checked = true;
             speakToolStripMenuItem.Checked = false;
 
             gameDataJson = new GameDataJson(gameBoardControl, this);
         }
+
 
         private int latestBlackCounters;
         private int latestWhiteCounters;
@@ -100,7 +97,6 @@ namespace ONeilloGame
             latestWhiteCounters = whiteCounters;
 
         }
-
         public PlayerDataAndCounters GetPlayerData()
         {
             //text controls
@@ -116,23 +112,7 @@ namespace ONeilloGame
                 WhiteCounters = latestWhiteCounters
             };
         }
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-        private void pictureBox2_Click(object sender, EventArgs e)
-        {
-
-        }
-        private void pictureBox2_Click_1(object sender, EventArgs e)
-        {
-
-        }
         private void UserControl1_Load(object sender, EventArgs e)
-        {
-
-        }
-        private void pictureBox3_Click(object sender, EventArgs e)
         {
 
         }
@@ -222,7 +202,6 @@ namespace ONeilloGame
                 Debug.WriteLine("SpeechSynthesizer is not initialized or speaking is turned off");
             }
         }
-
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string message = "Do you want to close this window?";
@@ -247,6 +226,8 @@ namespace ONeilloGame
 
                             // Pass the SaveGame instance to SaveGameData
                             SaveGameData(gameName, selectedSlot);
+                            MessageBox.Show("Your game has been saved!");
+                            this.Close(); 
                         }
                     }
                 }
@@ -256,12 +237,6 @@ namespace ONeilloGame
                 }
             }
             // No else clause is needed for the outer DialogResult.Yes check
-        }
-
-
-        private void menuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
-        {
-
         }
 
         private void saveGameToolStripMenuItem_Click(object sender, EventArgs e)
@@ -283,16 +258,44 @@ namespace ONeilloGame
         {
             // Access the current game data
             GameDataJson.Composite compositeToSave = gameDataJson.DeserializedComposite;
+            SaveGame saveGameForm = new SaveGame(gameDataJson);
+
+            // Check if the slot is already occupied
+            string selectedSlotName = $"Slot {selectedSlot}";
+
+            bool slotOccupied = compositeToSave.Data.Any(item => item.GameName == selectedSlotName);
+
+            if (slotOccupied)
+            {
+                // Ask the user if they want to overwrite the existing data
+                DialogResult result = MessageBox.Show($"Slot {selectedSlot} is already occupied. Do you want to overwrite the existing data?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                // Check the user's response
+                if (result == DialogResult.No)
+                {
+                    return;
+                }
+            }
+
+            string selectedSlotString = selectedSlot.ToString();
 
             // Save the game data to the selected slot
-            string selectedSlotName = $"Slot {selectedSlot}";
-            compositeToSave.Data[selectedSlotName] = compositeToSave.Gdata;
+            compositeToSave.Data.Add(new GameDataJson.Gdata
+            {
+                GameBoardArray = compositeToSave.Gdata.GameBoardArray,
+                PlayerDataAndCounters = compositeToSave.Gdata.PlayerDataAndCounters,
+                GameName = compositeToSave.Gdata.GameName,
+                SaveSpace = selectedSlotString
+            });
 
             // Update the game name
             compositeToSave.Gdata.GameName = gameName;
 
             // Save the updated data
-            gameDataJson.SaveGameData(compositeToSave);
+            //gameDataJson.SaveGameData(compositeToSave);
+            SaveGameDataToSlot(compositeToSave, gameName, selectedSlot, saveGameForm);
+
+
         }
 
         private void SaveGameDataToSlot(GameDataJson.Composite composite, string gameName, int slot, SaveGame saveGameForm)
@@ -300,7 +303,6 @@ namespace ONeilloGame
             // Save the composite to the specified slot
             saveGameForm.SavingLogic();
         }
-
 
         private void loadGameToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -332,11 +334,7 @@ namespace ONeilloGame
                     SaveGame saveGameForm = new SaveGame(gameDataJson);
                     DialogResult saveResult = saveGameForm.ShowDialog();
 
-                    if (saveResult == DialogResult.OK)
-                    {
-                        // No need to call RefreshBoard here; it will be called at the end of the method
-                    }
-                    else if (saveResult == DialogResult.Cancel)
+                    if (saveResult == DialogResult.Cancel)
                     {
                         return;
                     }
@@ -348,13 +346,43 @@ namespace ONeilloGame
                     return;
             }
 
-            // Dispose the existing control if it exists
-            //gameBoardControl?.Dispose();
+            //MessageBox.Show("Player has asked for a new game");
 
-            // Create a new instance of GameBoardControl
-            gameBoardControl = new GameBoardControl(this);
+            gameBoardControl.ResetBoard();
+        }
 
-            gameBoardControl.RefreshBoard();
+        private void GameBoardControl_BoardReset()
+        {
+            //MessageBox.Show("Inside GameBoardControl_BoardReset");
+            try
+            {
+                ResetPlayerData();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Board cannot be reset, please restart application- exception: {ex.Message}");
+            }
+        }
+
+        private void ResetPlayerData()
+        {
+            int originalCounters = 2;
+
+            // Reset player counters
+            bottomplayer1Counter.Text = originalCounters.ToString();
+            bottomplayer2Counter.Text = originalCounters.ToString();
+
+            //reset player names
+            bottomtextBoxPlayer1.Text = string.Empty;
+            bottomtextBoxPlayer2.Text = string.Empty;
+            bottomtextBoxPlayer1.Enabled = true;
+            bottomtextBoxPlayer2.Enabled = true;
+
+            // Enable game play button again if it's not already enabled
+            if (!bottomstartGameBtn.Enabled)
+            {
+                bottomstartGameBtn.Enabled = true;
+            }
         }
 
     }
