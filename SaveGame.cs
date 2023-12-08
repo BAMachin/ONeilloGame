@@ -28,7 +28,7 @@ namespace ONeilloGame
                 comboBoxGameSlotChoice.Items.Add($"Game Slot: {i}");
             }
 
-            SelectedSlot = 0; // Set a default slot index
+            //SelectedSlot = 0; // Set a default slot index
 
             // Display default values in UI
             txtBoxGameName.Text = GameName;
@@ -47,14 +47,14 @@ namespace ONeilloGame
             // Validate input
             if (string.IsNullOrWhiteSpace(txtBoxGameName.Text))
             {
-                MessageBox.Show("Please enter a valid game name.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                //default name
+                GameName = $"ONellio Game - {DateTime.Now:yyyy-MM-dd HH:mm:ss}";
             }
 
             if (comboBoxGameSlotChoice.SelectedIndex < 0)
             {
-                MessageBox.Show("Please select a game slot.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                //default save slot
+                SelectedSlot = 0;
             }
 
             // Get the current game data
@@ -62,6 +62,8 @@ namespace ONeilloGame
 
             // Find the index of the selected slot
             int selectedIndex = comboBoxGameSlotChoice.SelectedIndex;
+            string selectIndexString = selectedIndex.ToString(); 
+            compositeToSave.Gdata.SaveSpace = selectIndexString; 
 
             // Check if the index is within the range of existing slots
             if (selectedIndex >= 0 && selectedIndex < compositeToSave.Data.Count)

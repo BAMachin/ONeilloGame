@@ -15,9 +15,8 @@ using static ONeilloGame.GameDataJson;
 //TO DO:
 //Check code logic - validate moves
 
-//how to make it load the slots 
-//how to make it update the file rather than rewrite
-//loading a game
+//save game & add to file rather than over write
+//retrieve file 
 
 //final touches....
 //to make board game square rather than rectangular
@@ -53,7 +52,6 @@ namespace ONeilloGame
 
             gameDataJson = new GameDataJson(gameBoardControl, this);
         }
-
 
         private int latestBlackCounters;
         private int latestWhiteCounters;
@@ -225,7 +223,7 @@ namespace ONeilloGame
                             int selectedSlot = saveGameForm.SelectedSlot;
 
                             // Pass the SaveGame instance to SaveGameData
-                            SaveGameData(gameName, selectedSlot);
+                            SaveGameData(saveGameForm);
                             MessageBox.Show("Your game has been saved!");
                             this.Close(); 
                         }
@@ -246,23 +244,22 @@ namespace ONeilloGame
             {
                 if (saveGameForm.ShowDialog() == DialogResult.OK)
                 {
-                    string gameName = saveGameForm.GameName;
-                    int selectedSlot = saveGameForm.SelectedSlot;
-
-                    SaveGameData(gameName, selectedSlot);
+                    SaveGameData(saveGameForm);
                 }
             }
         }
 
-        private void SaveGameData(string gameName, int selectedSlot)
+        private void SaveGameData(SaveGame saveGameForm)
         {
             // Access the current game data
             GameDataJson.Composite compositeToSave = gameDataJson.DeserializedComposite;
-            SaveGame saveGameForm = new SaveGame(gameDataJson);
+
+            // Retrieve game name and selected slot from the provided SaveGame instance
+            string gameName = saveGameForm.GameName;
+            int selectedSlot = saveGameForm.SelectedSlot;
 
             // Check if the slot is already occupied
             string selectedSlotName = $"Slot {selectedSlot}";
-
             bool slotOccupied = compositeToSave.Data.Any(item => item.GameName == selectedSlotName);
 
             if (slotOccupied)
@@ -291,16 +288,7 @@ namespace ONeilloGame
             // Update the game name
             compositeToSave.Gdata.GameName = gameName;
 
-            // Save the updated data
-            //gameDataJson.SaveGameData(compositeToSave);
-            SaveGameDataToSlot(compositeToSave, gameName, selectedSlot, saveGameForm);
-
-
-        }
-
-        private void SaveGameDataToSlot(GameDataJson.Composite composite, string gameName, int slot, SaveGame saveGameForm)
-        {
-            // Save the composite to the specified slot
+            // Save the updated data using the provided SaveGame instance
             saveGameForm.SavingLogic();
         }
 
