@@ -9,7 +9,6 @@ namespace ONeilloGame
     internal partial class SaveGame : Form
     {
         private readonly GameDataJson gameDataJson;
-
         public string GameName { get; private set; }
         public int SelectedSlot { get; private set; }
 
@@ -27,8 +26,6 @@ namespace ONeilloGame
             {
                 comboBoxGameSlotChoice.Items.Add($"Game Slot: {i}");
             }
-
-            //SelectedSlot = 0; // Set a default slot index
 
             // Display default values in UI
             txtBoxGameName.Text = GameName;

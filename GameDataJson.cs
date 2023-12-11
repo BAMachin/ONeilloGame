@@ -69,10 +69,25 @@ namespace ONeilloGame
             if (!Directory.Exists(directory))
             {
                 Directory.CreateDirectory(directory);
-            }
 
-            string stringComposite = JsonConvert.SerializeObject(compositeToSerialize, Formatting.Indented);
-            File.WriteAllText(filePath, stringComposite);
+                string stringComposite = JsonConvert.SerializeObject(compositeToSerialize, Formatting.Indented);
+                File.WriteAllText(filePath, stringComposite);
+
+            }
+            else
+            {
+                string dataAlreadyInFileString = File.ReadAllText(filePath);
+                var existingComposite = JsonConvert.DeserializeObject<Composite>(dataAlreadyInFileString);
+
+                // Add the new data to the existing data
+                existingComposite.Data.Add(compositeToSerialize.Gdata);
+
+                // Serialize the combined data
+                string updatedData = JsonConvert.SerializeObject(existingComposite, Formatting.Indented);
+
+                // Write the updated data back to the file
+                File.WriteAllText(filePath, updatedData);
+            }
         }
 
         public Composite LoadGameData(string filePath = FilePath)

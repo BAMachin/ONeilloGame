@@ -15,7 +15,6 @@ using static ONeilloGame.GameDataJson;
 //TO DO:
 //Check code logic - validate moves
 
-//save game & add to file rather than over write
 //retrieve file 
 
 //final touches....
@@ -251,23 +250,18 @@ namespace ONeilloGame
 
         private void SaveGameData(SaveGame saveGameForm)
         {
-            // Access the current game data
             GameDataJson.Composite compositeToSave = gameDataJson.DeserializedComposite;
 
-            // Retrieve game name and selected slot from the provided SaveGame instance
             string gameName = saveGameForm.GameName;
             int selectedSlot = saveGameForm.SelectedSlot;
 
-            // Check if the slot is already occupied
             string selectedSlotName = $"Slot {selectedSlot}";
             bool slotOccupied = compositeToSave.Data.Any(item => item.GameName == selectedSlotName);
 
             if (slotOccupied)
             {
-                // Ask the user if they want to overwrite the existing data
                 DialogResult result = MessageBox.Show($"Slot {selectedSlot} is already occupied. Do you want to overwrite the existing data?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
-                // Check the user's response
                 if (result == DialogResult.No)
                 {
                     return;
@@ -276,7 +270,6 @@ namespace ONeilloGame
 
             string selectedSlotString = selectedSlot.ToString();
 
-            // Save the game data to the selected slot
             compositeToSave.Data.Add(new GameDataJson.Gdata
             {
                 GameBoardArray = compositeToSave.Gdata.GameBoardArray,
@@ -285,32 +278,49 @@ namespace ONeilloGame
                 SaveSpace = selectedSlotString
             });
 
-            // Update the game name
             compositeToSave.Gdata.GameName = gameName;
 
-            // Save the updated data using the provided SaveGame instance
             saveGameForm.SavingLogic();
         }
 
-        private void loadGameToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            // Load the game data
-            GameDataJson.Composite loadedComposite = gameDataJson.LoadGameData();
+        //private void loadGameToolStripMenuItem_Click(object sender, EventArgs e)
+        //{
+        //    // Load all game data from the JSON file
+        //    List<GameDataJson.Gdata> savedGames = LoadAllGameData();
 
-            if (loadedComposite != null)
-            {
-                // Assuming you have instances of Gdata and PlayerDataAndCounters within your GameDataJson class
-                //gameDataJson.Gdata.GameBoardArray = loadedComposite.Gdata.GameBoardArray;
-                //gameDataJson.PlayerDataAndCounters.Player1Name = loadedComposite.Gdata.PlayerData.Player1Name;
-                //gameDataJson.PlayerDataAndCounters.Player2Name = loadedComposite.Gdata.PlayerData.Player2Name;
-                //gameDataJson.PlayerDataAndCounters.BlackCounters = loadedComposite.Gdata.PlayerData.BlackCounters;
-                //gameDataJson.PlayerDataAndCounters.WhiteCounters = loadedComposite.Gdata.PlayerData.WhiteCounters;
-            }
-            else
-            {
-                MessageBox.Show("No saved game data found.", "Load Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-        }
+        //    // Check if there are saved games
+        //    if (savedGames.Count > 0)
+        //    {
+        //        // If there are saved games, create and show the form for selecting a game
+        //        using (LoadGame loadGameForm = new LoadGame(savedGames))
+        //        {
+        //            // Show the form as a dialog
+        //            DialogResult result = loadGameForm.ShowDialog();
+
+        //            // Check if the user selected a game
+        //            if (result == DialogResult.OK)
+        //            {
+        //                // Retrieve the selected game data from the form
+        //                GameDataJson.Gdata selectedGameData = loadGameForm.SelectedGameData;
+
+        //                // Load the game data based on the selected game
+        //                LoadGameData(selectedGameData);
+        //            }
+                    
+        //        }
+        //    }
+        //    else
+        //    {
+        //        MessageBox.Show("No saved games available.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        //    }
+        //}
+
+        //private List<GameDataJson.Gdata> LoadAllGameData()
+        //{
+            
+        //}
+
+
 
         private void newGameToolStripMenuItem_Click(object sender, EventArgs e)
         {
