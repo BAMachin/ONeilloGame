@@ -11,16 +11,16 @@ using System.Speech.Synthesis;
 using System.Diagnostics;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using static ONeilloGame.GameDataJson;
+using System.Runtime.CompilerServices;
 
 //TO DO:
-//Check code logic - validate moves
+//Review code logic to make sure moves are accurate
 
-//retrieve file 
+//Retrieve file 
 
-//final touches....
-//to make board game square rather than rectangular
-//check all variable names
-//check all comment locations and if required
+//Check all variable names
+//Check all comment locations and if required
+//To make board game square rather than rectangular
 
 namespace ONeilloGame
 {
@@ -33,6 +33,7 @@ namespace ONeilloGame
         private PlayerDataAndCounters PlayerDataAndCounters = new PlayerDataAndCounters();
 
         private GameDataJson gameDataJson;
+        private LoadGame loadGameForm;
 
         public ONeilloGame()
         {
@@ -50,6 +51,7 @@ namespace ONeilloGame
             speakToolStripMenuItem.Checked = false;
 
             gameDataJson = new GameDataJson(gameBoardControl, this);
+            loadGameForm = new LoadGame(); 
         }
 
         private int latestBlackCounters;
@@ -224,7 +226,7 @@ namespace ONeilloGame
                             // Pass the SaveGame instance to SaveGameData
                             SaveGameData(saveGameForm);
                             MessageBox.Show("Your game has been saved!");
-                            this.Close(); 
+                            this.Close();
                         }
                     }
                 }
@@ -283,45 +285,6 @@ namespace ONeilloGame
             saveGameForm.SavingLogic();
         }
 
-        //private void loadGameToolStripMenuItem_Click(object sender, EventArgs e)
-        //{
-        //    // Load all game data from the JSON file
-        //    List<GameDataJson.Gdata> savedGames = LoadAllGameData();
-
-        //    // Check if there are saved games
-        //    if (savedGames.Count > 0)
-        //    {
-        //        // If there are saved games, create and show the form for selecting a game
-        //        using (LoadGame loadGameForm = new LoadGame(savedGames))
-        //        {
-        //            // Show the form as a dialog
-        //            DialogResult result = loadGameForm.ShowDialog();
-
-        //            // Check if the user selected a game
-        //            if (result == DialogResult.OK)
-        //            {
-        //                // Retrieve the selected game data from the form
-        //                GameDataJson.Gdata selectedGameData = loadGameForm.SelectedGameData;
-
-        //                // Load the game data based on the selected game
-        //                LoadGameData(selectedGameData);
-        //            }
-                    
-        //        }
-        //    }
-        //    else
-        //    {
-        //        MessageBox.Show("No saved games available.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        //    }
-        //}
-
-        //private List<GameDataJson.Gdata> LoadAllGameData()
-        //{
-            
-        //}
-
-
-
         private void newGameToolStripMenuItem_Click(object sender, EventArgs e)
         {
             DialogResult result = MessageBox.Show("Do you want to save the current game?", "Save Confirmation", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
@@ -348,10 +311,8 @@ namespace ONeilloGame
 
             gameBoardControl.ResetBoard();
         }
-
         private void GameBoardControl_BoardReset()
         {
-            //MessageBox.Show("Inside GameBoardControl_BoardReset");
             try
             {
                 ResetPlayerData();
@@ -361,7 +322,6 @@ namespace ONeilloGame
                 MessageBox.Show($"Board cannot be reset, please restart application- exception: {ex.Message}");
             }
         }
-
         private void ResetPlayerData()
         {
             int originalCounters = 2;
@@ -383,5 +343,39 @@ namespace ONeilloGame
             }
         }
 
+        public void LoadToSavedGame(string player1Name, string player2Name, int blackCounters, int whiteCounters)
+        {
+            //counters
+            bottomplayer1Counter.Text = blackCounters.ToString();
+            bottomplayer2Counter.Text = whiteCounters.ToString();
+
+            //names
+            bottomtextBoxPlayer1.Text = player1Name;
+            bottomtextBoxPlayer2.Text = player2Name;
+            bottomtextBoxPlayer1.Enabled = true;
+            bottomtextBoxPlayer2.Enabled = true;
+
+            // Enable game play button again if it's not already enabled
+            if (!bottomstartGameBtn.Enabled)
+            {
+                bottomstartGameBtn.Enabled = true;
+            }
+
+        }
+
+        private void loadGameToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (LoadGame loadGameForm = new LoadGame())
+            {
+                loadGameForm.ShowDialog();
+            }
+        }
     }
+
+
+
+
+
+
+
 }

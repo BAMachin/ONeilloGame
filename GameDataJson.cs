@@ -90,7 +90,7 @@ namespace ONeilloGame
             }
         }
 
-        public Composite LoadGameData(string filePath = FilePath)
+        public Composite LoadAllGameData(string filePath = FilePath)
         {
             if (!File.Exists(filePath))
             {

@@ -3,6 +3,7 @@ using System.Diagnostics.Eventing.Reader;
 using System.Reflection.Emit;
 using System.Security.AccessControl;
 using System.Security.Cryptography.X509Certificates;
+using System.Speech.Synthesis;
 using System.Windows.Forms;
 using static ONeilloGame.GameDataJson;
 using static System.Windows.Forms.DataFormats;
@@ -83,6 +84,30 @@ namespace ONeilloGame
             BoardReset?.Invoke();
             playerColour = 0; 
         }
+        public void ResetBoardBasedOnSavedData(string player1Name, string player2Name, int blackCounters, int whiteCounters, int[,] 
+            gameBoardArrayFromData)
+        {
+            // Copy the saved game board array to the current board array
+            Array.Copy(gameBoardArrayFromData, gameBoardArray, gameBoardArrayFromData.Length);
+
+            // Update the GUI with the new board state
+            gameboardGui.UpdateBoardGui(gameBoardArray);
+
+            // Set playerColour to 0
+            playerColour = 0;
+
+            // Set player names and counters
+            SetPlayerNamesAndCounters(player1Name, player2Name, blackCounters, whiteCounters);
+
+        }
+        public void SetPlayerNamesAndCounters(string player1Name, string player2Name, int blackCounters, int whiteCounters)
+        {
+            ONeilloGame ONellioGame = new ONeilloGame();
+            ONellioGame.LoadToSavedGame(player1Name, player2Name, blackCounters, whiteCounters);
+        }
+
+
+
 
         public int[,] MakeBoardGame()
         {
