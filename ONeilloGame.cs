@@ -15,9 +15,6 @@ using System.Runtime.CompilerServices;
 
 //TO DO:
 //Review code logic to make sure moves are accurate
-
-//Retrieve file 
-
 //Check all variable names
 //Check all comment locations and if required
 //To make board game square rather than rectangular
@@ -33,6 +30,7 @@ namespace ONeilloGame
         private PlayerDataAndCounters PlayerDataAndCounters = new PlayerDataAndCounters();
 
         private GameDataJson gameDataJson;
+
         private LoadGame loadGameForm;
 
         public ONeilloGame()
@@ -41,6 +39,7 @@ namespace ONeilloGame
 
             gameBoardControl = new GameBoardControl(this);
             this.Controls.Add(gameBoardControl);
+
             synth = new SpeechSynthesizer();
 
             gameBoardControl.PlayerTurnChanged += GameBoardControl_PlayerTurnChanged;
@@ -51,7 +50,6 @@ namespace ONeilloGame
             speakToolStripMenuItem.Checked = false;
 
             gameDataJson = new GameDataJson(gameBoardControl, this);
-            loadGameForm = new LoadGame(); 
         }
 
         private int latestBlackCounters;
@@ -235,9 +233,7 @@ namespace ONeilloGame
                     this.Close();
                 }
             }
-            // No else clause is needed for the outer DialogResult.Yes check
         }
-
         private void saveGameToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Save game has been clicked
@@ -249,7 +245,6 @@ namespace ONeilloGame
                 }
             }
         }
-
         private void SaveGameData(SaveGame saveGameForm)
         {
             GameDataJson.Composite compositeToSave = gameDataJson.DeserializedComposite;
@@ -284,7 +279,6 @@ namespace ONeilloGame
 
             saveGameForm.SavingLogic();
         }
-
         private void newGameToolStripMenuItem_Click(object sender, EventArgs e)
         {
             DialogResult result = MessageBox.Show("Do you want to save the current game?", "Save Confirmation", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
@@ -342,33 +336,50 @@ namespace ONeilloGame
                 bottomstartGameBtn.Enabled = true;
             }
         }
+        private void LoadGameToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            loadGameForm = new LoadGame(ref gameBoardControl);
+            loadGameForm.ShowDialog();
+        }
 
         public void LoadToSavedGame(string player1Name, string player2Name, int blackCounters, int whiteCounters)
         {
-            //counters
-            bottomplayer1Counter.Text = blackCounters.ToString();
-            bottomplayer2Counter.Text = whiteCounters.ToString();
-
-            //names
-            bottomtextBoxPlayer1.Text = player1Name;
-            bottomtextBoxPlayer2.Text = player2Name;
             bottomtextBoxPlayer1.Enabled = true;
             bottomtextBoxPlayer2.Enabled = true;
 
-            // Enable game play button again if it's not already enabled
-            if (!bottomstartGameBtn.Enabled)
-            {
-                bottomstartGameBtn.Enabled = true;
-            }
+            bottomtextBoxPlayer1.Text = string.Empty;
+            bottomtextBoxPlayer2.Text = string.Empty;
+            UpdatePlayerNamesOnUIThread(player1Name, player2Name);
 
+            // updates counters
+            GameBoardControl_CountersUpdated(blackCounters, whiteCounters);
+            //counter values come on to the UI once the next counter is placed
+
+            informationPanelToolStripMenuItem.Checked = true;
+            speakToolStripMenuItem.Checked = false;
+
+            this.Refresh();
+        }
+        private void UpdatePlayerNamesOnUIThread(string player1Name, string player2Name)
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke((MethodInvoker)delegate
+                {
+                    bottomtextBoxPlayer1.Text = player1Name;
+                    bottomtextBoxPlayer2.Text = player2Name;
+                });
+            }
+            else
+            {
+                bottomtextBoxPlayer1.Text = player1Name;
+                bottomtextBoxPlayer2.Text = player2Name;
+            }
         }
 
-        private void loadGameToolStripMenuItem_Click(object sender, EventArgs e)
+        private void bottomtextBoxPlayer1_TextChanged(object sender, EventArgs e)
         {
-            using (LoadGame loadGameForm = new LoadGame())
-            {
-                loadGameForm.ShowDialog();
-            }
+            
         }
     }
 

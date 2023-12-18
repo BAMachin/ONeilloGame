@@ -31,6 +31,8 @@ namespace ONeilloGame
         public delegate void BoardResetEventHandler();
         public event BoardResetEventHandler BoardReset;
 
+        public ONeilloGame ONeilloGame; 
+
         //Returning the array that makes up the board.
         int[,] gameBoardArray = new int[ROWS, COLUMNS];
 
@@ -53,11 +55,11 @@ namespace ONeilloGame
         }
 
 
-        public GameBoardControl(Form parent) //Pulling in the parent form before code runs
+        public GameBoardControl(Form parent)
         {
             InitializeComponent();
 
-            //To set the first point and the last point on the board
+            // To set the first point and the last point on the board
             Point topCorner = new Point(10, 30);
             Point bottomCorner = new Point(10, 135);
 
@@ -65,13 +67,14 @@ namespace ONeilloGame
 
             try
             {
+                parent.ClientSize = new Size(816, 816);
+
                 this.gameboardGui = new GameboardImageArray(parent, gameboardCoords, topCorner, bottomCorner, tileMargin, imagePath);
                 gameboardGui.UpdateBoardGui(gameboardCoords);
                 gameboardGui.TileClicked += new GameboardImageArray.TileClickedEventDelegate(GameTileClicked);
             }
             catch (Exception ex)
             {
-                // Handling the error
                 MessageBox.Show("An error with the game occurred: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 parent.Close();
             }
@@ -82,10 +85,10 @@ namespace ONeilloGame
             MakeBoardGame(); //returns the original array with all 10s except 4 middle counters
             gameboardGui.UpdateBoardGui(gameBoardArray);
             BoardReset?.Invoke();
-            playerColour = 0; 
+            playerColour = 0;
         }
-        public void ResetBoardBasedOnSavedData(string player1Name, string player2Name, int blackCounters, int whiteCounters, int[,] 
-            gameBoardArrayFromData)
+
+        public void ResetBoardBasedOnSavedData(string player1Name, string player2Name, int blackCounters, int whiteCounters, int[,] gameBoardArrayFromData)
         {
             // Copy the saved game board array to the current board array
             Array.Copy(gameBoardArrayFromData, gameBoardArray, gameBoardArrayFromData.Length);
@@ -96,18 +99,10 @@ namespace ONeilloGame
             // Set playerColour to 0
             playerColour = 0;
 
-            // Set player names and counters
-            SetPlayerNamesAndCounters(player1Name, player2Name, blackCounters, whiteCounters);
-
+            MessageBox.Show($"Game Loading: {player1Name} with {blackCounters} counters, {player2Name} with {whiteCounters} counters");
+            ONeilloGame ONeilloGame = new ONeilloGame();
+            ONeilloGame.LoadToSavedGame(player1Name, player2Name, blackCounters, whiteCounters);
         }
-        public void SetPlayerNamesAndCounters(string player1Name, string player2Name, int blackCounters, int whiteCounters)
-        {
-            ONeilloGame ONellioGame = new ONeilloGame();
-            ONellioGame.LoadToSavedGame(player1Name, player2Name, blackCounters, whiteCounters);
-        }
-
-
-
 
         public int[,] MakeBoardGame()
         {
@@ -327,13 +322,13 @@ namespace ONeilloGame
 
             // Place the player's piece in the current position
             gameBoardArray[rowSelect, colSelect] = playerColour; // Set the current player's color
-            SetTileForGamePlay(rowSelect, colSelect, playerColour); // Assuming SetTileForGamePlay sets the UI or representation
+            SetTileForGamePlay(rowSelect, colSelect, playerColour); 
         }
 
         private void SwapColour(int row, int col, int[,] gameBoardArray)
         {
             gameBoardArray[row, col] = playerColour; // Set the current player's color
-            SetTileForGamePlay(row, col, playerColour); // Assuming SetTileForGamePlay sets the UI or representation
+            SetTileForGamePlay(row, col, playerColour); 
         }
 
         public void SetTileForGamePlay(int rowSelect, int colSelect, int playerColour)

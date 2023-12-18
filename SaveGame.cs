@@ -11,8 +11,7 @@ namespace ONeilloGame
         private readonly GameDataJson gameDataJson;
         public string GameName { get; private set; }
         public int SelectedSlot { get; private set; }
-
-        //public string Settings { get; private set; }
+        public string Settings { get; private set; }
 
         internal SaveGame(GameDataJson gameDataJson)
         {
@@ -21,7 +20,6 @@ namespace ONeilloGame
 
             GameName = $"ONellio Game - {DateTime.Now:yyyy-MM-dd HH:mm:ss}";
 
-            // Populate the ComboBox with available slots
             for (int i = 1; i <= 5; i++)
             {
                 comboBoxGameSlotChoice.Items.Add($"Game Slot: {i}");

@@ -60,9 +60,9 @@
             // 
             bottompictureBox1.Anchor = AnchorStyles.Bottom;
             bottompictureBox1.BackColor = SystemColors.MenuHighlight;
-            bottompictureBox1.Location = new Point(1, 649);
+            bottompictureBox1.Location = new Point(0, 659);
             bottompictureBox1.Name = "bottompictureBox1";
-            bottompictureBox1.Size = new Size(789, 118);
+            bottompictureBox1.Size = new Size(800, 128);
             bottompictureBox1.TabIndex = 0;
             bottompictureBox1.TabStop = false;
             // 
@@ -72,10 +72,9 @@
             menuStrip1.Items.AddRange(new ToolStripItem[] { gameToolStripMenuItem, settingsToolStripMenuItem, helpToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(790, 24);
+            menuStrip1.Size = new Size(800, 24);
             menuStrip1.TabIndex = 1;
             menuStrip1.Text = "menuStrip1";
-            //menuStrip1.ItemClicked += menuStrip1_ItemClicked;
             // 
             // gameToolStripMenuItem
             // 
@@ -87,28 +86,28 @@
             // newGameToolStripMenuItem
             // 
             newGameToolStripMenuItem.Name = "newGameToolStripMenuItem";
-            newGameToolStripMenuItem.Size = new Size(180, 22);
+            newGameToolStripMenuItem.Size = new Size(134, 22);
             newGameToolStripMenuItem.Text = "New Game";
             newGameToolStripMenuItem.Click += newGameToolStripMenuItem_Click;
             // 
             // loadGameToolStripMenuItem
             // 
             loadGameToolStripMenuItem.Name = "loadGameToolStripMenuItem";
-            loadGameToolStripMenuItem.Size = new Size(180, 22);
+            loadGameToolStripMenuItem.Size = new Size(134, 22);
             loadGameToolStripMenuItem.Text = "Load Game";
-            loadGameToolStripMenuItem.Click += loadGameToolStripMenuItem_Click;
+            loadGameToolStripMenuItem.Click += LoadGameToolStripMenuItem_Click;
             // 
             // saveGameToolStripMenuItem
             // 
             saveGameToolStripMenuItem.Name = "saveGameToolStripMenuItem";
-            saveGameToolStripMenuItem.Size = new Size(180, 22);
+            saveGameToolStripMenuItem.Size = new Size(134, 22);
             saveGameToolStripMenuItem.Text = "Save Game";
             saveGameToolStripMenuItem.Click += saveGameToolStripMenuItem_Click;
             // 
             // exitToolStripMenuItem
             // 
             exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            exitToolStripMenuItem.Size = new Size(180, 22);
+            exitToolStripMenuItem.Size = new Size(134, 22);
             exitToolStripMenuItem.Text = "Exit";
             exitToolStripMenuItem.Click += exitToolStripMenuItem_Click;
             // 
@@ -155,7 +154,7 @@
             bottomtextBoxPlayer2.BorderStyle = BorderStyle.None;
             bottomtextBoxPlayer2.Cursor = Cursors.IBeam;
             bottomtextBoxPlayer2.Font = new Font("Calibri", 20.25F, FontStyle.Regular, GraphicsUnit.Point);
-            bottomtextBoxPlayer2.Location = new Point(549, 666);
+            bottomtextBoxPlayer2.Location = new Point(551, 676);
             bottomtextBoxPlayer2.Name = "bottomtextBoxPlayer2";
             bottomtextBoxPlayer2.PlaceholderText = "Player #2";
             bottomtextBoxPlayer2.Size = new Size(108, 33);
@@ -165,24 +164,25 @@
             // bottomtextBoxPlayer1
             // 
             bottomtextBoxPlayer1.AcceptsReturn = true;
+            bottomtextBoxPlayer1.AcceptsTab = true;
             bottomtextBoxPlayer1.Anchor = AnchorStyles.Bottom;
             bottomtextBoxPlayer1.BackColor = SystemColors.HighlightText;
             bottomtextBoxPlayer1.BorderStyle = BorderStyle.None;
             bottomtextBoxPlayer1.Cursor = Cursors.IBeam;
             bottomtextBoxPlayer1.Font = new Font("Calibri", 20.25F, FontStyle.Regular, GraphicsUnit.Point);
-            bottomtextBoxPlayer1.Location = new Point(138, 666);
+            bottomtextBoxPlayer1.Location = new Point(143, 676);
             bottomtextBoxPlayer1.Name = "bottomtextBoxPlayer1";
             bottomtextBoxPlayer1.PlaceholderText = "Player #1";
             bottomtextBoxPlayer1.Size = new Size(111, 33);
             bottomtextBoxPlayer1.TabIndex = 2;
             bottomtextBoxPlayer1.TextAlign = HorizontalAlignment.Center;
-            //bottomtextBoxPlayer1.TextChanged += textBox1_TextChanged;
+            bottomtextBoxPlayer1.TextChanged += bottomtextBoxPlayer1_TextChanged;
             // 
             // bottompictureBox2
             // 
             bottompictureBox2.Anchor = AnchorStyles.Bottom;
             bottompictureBox2.Image = Properties.Resources._0;
-            bottompictureBox2.Location = new Point(1, 649);
+            bottompictureBox2.Location = new Point(0, 659);
             bottompictureBox2.Name = "bottompictureBox2";
             bottompictureBox2.Size = new Size(128, 118);
             bottompictureBox2.TabIndex = 4;
@@ -190,14 +190,14 @@
             // 
             // bottompictureBox3
             // 
+            bottompictureBox3.Anchor = AnchorStyles.Bottom;
             bottompictureBox3.Image = Properties.Resources._11;
-            bottompictureBox3.Location = new Point(663, 649);
+            bottompictureBox3.Location = new Point(668, 659);
             bottompictureBox3.Name = "bottompictureBox3";
-            bottompictureBox3.Size = new Size(127, 118);
+            bottompictureBox3.Size = new Size(132, 118);
             bottompictureBox3.SizeMode = PictureBoxSizeMode.StretchImage;
             bottompictureBox3.TabIndex = 5;
             bottompictureBox3.TabStop = false;
-            //bottompictureBox3.Click += pictureBox3_Click;
             // 
             // bottomlabel2PlayerTwoTurn
             // 
@@ -206,7 +206,7 @@
             bottomlabel2PlayerTwoTurn.BackColor = SystemColors.MenuHighlight;
             bottomlabel2PlayerTwoTurn.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold | FontStyle.Underline, GraphicsUnit.Point);
             bottomlabel2PlayerTwoTurn.ForeColor = Color.Navy;
-            bottomlabel2PlayerTwoTurn.Location = new Point(546, 704);
+            bottomlabel2PlayerTwoTurn.Location = new Point(551, 714);
             bottomlabel2PlayerTwoTurn.Name = "bottomlabel2PlayerTwoTurn";
             bottomlabel2PlayerTwoTurn.Size = new Size(111, 20);
             bottomlabel2PlayerTwoTurn.TabIndex = 7;
@@ -220,7 +220,7 @@
             bottomplayer1Counter.BackColor = SystemColors.ActiveCaptionText;
             bottomplayer1Counter.Font = new Font("Segoe UI", 26.25F, FontStyle.Regular, GraphicsUnit.Point);
             bottomplayer1Counter.ForeColor = SystemColors.ButtonHighlight;
-            bottomplayer1Counter.Location = new Point(44, 683);
+            bottomplayer1Counter.Location = new Point(49, 693);
             bottomplayer1Counter.Name = "bottomplayer1Counter";
             bottomplayer1Counter.Size = new Size(0, 47);
             bottomplayer1Counter.TabIndex = 8;
@@ -231,7 +231,7 @@
             bottomplayer2Counter.AutoSize = true;
             bottomplayer2Counter.BackColor = SystemColors.Window;
             bottomplayer2Counter.Font = new Font("Segoe UI", 26.25F, FontStyle.Regular, GraphicsUnit.Point);
-            bottomplayer2Counter.Location = new Point(706, 683);
+            bottomplayer2Counter.Location = new Point(711, 693);
             bottomplayer2Counter.Name = "bottomplayer2Counter";
             bottomplayer2Counter.Size = new Size(0, 47);
             bottomplayer2Counter.TabIndex = 9;
@@ -241,7 +241,7 @@
             bottomstartGameBtn.Anchor = AnchorStyles.Bottom;
             bottomstartGameBtn.BackColor = Color.FromArgb(255, 128, 255);
             bottomstartGameBtn.Font = new Font("Segoe UI", 18F, FontStyle.Regular, GraphicsUnit.Point);
-            bottomstartGameBtn.Location = new Point(307, 683);
+            bottomstartGameBtn.Location = new Point(312, 693);
             bottomstartGameBtn.Name = "bottomstartGameBtn";
             bottomstartGameBtn.Size = new Size(191, 47);
             bottomstartGameBtn.TabIndex = 10;
@@ -256,7 +256,7 @@
             bottomlabel1Player1Turn.BackColor = SystemColors.MenuHighlight;
             bottomlabel1Player1Turn.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold | FontStyle.Underline, GraphicsUnit.Point);
             bottomlabel1Player1Turn.ForeColor = Color.Navy;
-            bottomlabel1Player1Turn.Location = new Point(138, 704);
+            bottomlabel1Player1Turn.Location = new Point(143, 714);
             bottomlabel1Player1Turn.Name = "bottomlabel1Player1Turn";
             bottomlabel1Player1Turn.Size = new Size(111, 20);
             bottomlabel1Player1Turn.TabIndex = 11;
@@ -267,8 +267,8 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackColor = SystemColors.ActiveCaption;
-            ClientSize = new Size(790, 767);
+            BackColor = SystemColors.GradientInactiveCaption;
+            ClientSize = new Size(800, 777);
             Controls.Add(bottomlabel1Player1Turn);
             Controls.Add(bottomstartGameBtn);
             Controls.Add(bottomplayer2Counter);
@@ -310,8 +310,6 @@
         private ToolStripMenuItem informationPanelToolStripMenuItem;
         private ToolStripMenuItem helpToolStripMenuItem;
         private ToolStripMenuItem aboutToolStripMenuItem;
-        private TextBox bottomtextBoxPlayer2;
-        private TextBox bottomtextBoxPlayer1;
         private PictureBox bottompictureBox2;
         private PictureBox bottompictureBox3;
         private Label bottomlabel2PlayerTwoTurn;
@@ -320,5 +318,7 @@
         private Button bottomstartGameBtn;
         private Label bottomlabel1Player1Turn;
         private ToolStripMenuItem loadGameToolStripMenuItem;
+        public TextBox bottomtextBoxPlayer2;
+        public TextBox bottomtextBoxPlayer1;
     }
 }

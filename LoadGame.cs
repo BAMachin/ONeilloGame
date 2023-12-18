@@ -1,44 +1,43 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using static ONeilloGame.GameDataJson;
+//using static ONeilloGame.GameDataJson;
 using System.Text.RegularExpressions;
 
 namespace ONeilloGame
 {
     public partial class LoadGame : Form
     {
-        private GameDataJson gameDataJson;
-        public GameBoardControl gameBoardControl;
-        public ONeilloGame ONeilloGame { get; }
+        public GameDataJson gameDataJson;
 
-        public LoadGame()
+        public GameBoardControl gameBoardControl;
+        public ONeilloGame ONeilloGame { get; set; }
+
+        public LoadGame(ref GameBoardControl gbc)
         {
             InitializeComponent();
-
-            btnCancel.Click += btnCancel_Click;
-            btnLoadGame.Click += btnLoadGame_Click;
 
             for (int i = 1; i <= 5; i++)
             {
                 comboBoxGameSlotChoiceLoading.Items.Add($"Game Slot {i}");
             }
 
-            // Create an instance of GameBoardControl
-            gameBoardControl = new GameBoardControl(this);
-
-            // Now you can initialize gameDataJson with the instantiated gameBoardControl
+            //gameBoardControl = new GameBoardControl(this);
             gameDataJson = new GameDataJson(gameBoardControl, ONeilloGame);
+            
+            this.gameBoardControl = gbc;
+
+            btnCancel.Click += btnCancel_Click;
+            btnLoadGame.Click += btnLoadGame_Click;
+
         }
 
-        private void btnLoadGame_Click(object sender, EventArgs e)
-        {
+       private void btnLoadGame_Click(object sender, EventArgs e)
+       {
             string filePath = "C:\\ONeilloGame\\game_data.json";
 
-            // Check if an item is selected in the ComboBox
             if (comboBoxGameSlotChoiceLoading.SelectedItem != null)
             {
-                // Get the selected game slot
                 string selectedGameSlotString = comboBoxGameSlotChoiceLoading.SelectedItem.ToString();
 
                 // Use regular expression to extract numeric part
@@ -49,12 +48,7 @@ namespace ONeilloGame
                     int selectedGameSlot = int.Parse(match.Value);
                     int adjustedGameSlot = selectedGameSlot - 1;
 
-                    //MessageBox.Show($"You have chosen {selectedGameSlotString}");
-                    //MessageBox.Show($"Adjusted Game Slot: {adjustedGameSlot}");
-
                     GameDataJson.Composite compositeToRetrieve = gameDataJson.LoadAllGameData(filePath);
-
-                    //MessageBox.Show("data returned...");
 
                     if (compositeToRetrieve != null && compositeToRetrieve.Data != null)
                     {
@@ -65,8 +59,7 @@ namespace ONeilloGame
                             if (saveSpaceFromJson == adjustedGameSlot.ToString())
                             {
                                 // Found the matching SaveSpace based on selectedGameSlot
-                                // Use saveSpaceItem as needed
-                                MessageBox.Show($"Found matching SaveSpace for user selection: {selectedGameSlotString}");
+                                //MessageBox.Show($"Found matching SaveSpace for user selection: {selectedGameSlotString}");
 
                                 string gameName = saveSpaceData.GameName;
                                 var playerData = saveSpaceData.PlayerDataAndCounters;
@@ -77,33 +70,32 @@ namespace ONeilloGame
 
                                 int[,] gameBoardArrayFromData = saveSpaceData.GameBoardArray;
 
-                                MessageBox.Show($"Game Name: {gameName}, players: {player1Name} & {player2Name}, counters: " +
-                                    $"{blackCounters} & {whiteCounters}");
-
-                                //Now using the data returned to update the board to that state:
+                                //MessageBox.Show($"Game Name: {gameName}, Players: {player1Name} & {player2Name}, ounters: " +
+                                    //$"{blackCounters} & {whiteCounters}");
 
                                 gameBoardControl.ResetBoardBasedOnSavedData(player1Name, player2Name, blackCounters, whiteCounters, gameBoardArrayFromData);
 
                                 break; 
-                                //Exit once the loop has been found 
                             }
                             else
                             {
-                                MessageBox.Show("Invalid game slot format.");
+                                MessageBox.Show("Please choose another game slot.");
                             }
                         }
                     }
                 }
                 else
                 {
-                    MessageBox.Show("Invalid game slot format.");
+                    MessageBox.Show("Please choose another game slot.");
                 }
+                this.Close(); 
             }
-        }
+       }
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
             this.Close();
         }
+
     }
 }
