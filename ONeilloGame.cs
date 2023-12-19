@@ -13,12 +13,6 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using static ONeilloGame.GameDataJson;
 using System.Runtime.CompilerServices;
 
-//TO DO:
-//Review code logic to make sure moves are accurate
-//Check all variable names
-//Check all comment locations and if required
-//To make board game square rather than rectangular
-
 namespace ONeilloGame
 {
     public partial class ONeilloGame : Form
@@ -45,6 +39,7 @@ namespace ONeilloGame
             gameBoardControl.PlayerTurnChanged += GameBoardControl_PlayerTurnChanged;
             gameBoardControl.CountersUpdated += GameBoardControl_CountersUpdated;
             gameBoardControl.BoardReset += GameBoardControl_BoardReset;
+            gameBoardControl.LoadGame += GameBoardControl_LoadGame;
 
             informationPanelToolStripMenuItem.Checked = true;
             speakToolStripMenuItem.Checked = false;
@@ -342,6 +337,18 @@ namespace ONeilloGame
             loadGameForm.ShowDialog();
         }
 
+        private void GameBoardControl_LoadGame(string player1Name, string player2Name, int blackCounters, int whiteCounters)
+        {
+            try
+            {
+                LoadToSavedGame(player1Name, player2Name, blackCounters, whiteCounters);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Game cannot be loaded, please restart application- exception: {ex.Message}");
+            }
+        }
+
         public void LoadToSavedGame(string player1Name, string player2Name, int blackCounters, int whiteCounters)
         {
             bottomtextBoxPlayer1.Enabled = true;
@@ -353,12 +360,11 @@ namespace ONeilloGame
 
             // updates counters
             GameBoardControl_CountersUpdated(blackCounters, whiteCounters);
-            //counter values come on to the UI once the next counter is placed
 
             informationPanelToolStripMenuItem.Checked = true;
             speakToolStripMenuItem.Checked = false;
 
-            this.Refresh();
+            Refresh();
         }
         private void UpdatePlayerNamesOnUIThread(string player1Name, string player2Name)
         {
@@ -379,7 +385,7 @@ namespace ONeilloGame
 
         private void bottomtextBoxPlayer1_TextChanged(object sender, EventArgs e)
         {
-            
+
         }
     }
 

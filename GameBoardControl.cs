@@ -31,6 +31,9 @@ namespace ONeilloGame
         public delegate void BoardResetEventHandler();
         public event BoardResetEventHandler BoardReset;
 
+        public delegate void LoadGameEventHandler(string player1Name, string player2Name, int blackCounters, int whiteCounters);
+        public event LoadGameEventHandler LoadGame;
+
         public ONeilloGame ONeilloGame; 
 
         //Returning the array that makes up the board.
@@ -58,6 +61,8 @@ namespace ONeilloGame
         public GameBoardControl(Form parent)
         {
             InitializeComponent();
+
+            this.ONeilloGame = ONeilloGame;
 
             // To set the first point and the last point on the board
             Point topCorner = new Point(10, 30);
@@ -99,9 +104,10 @@ namespace ONeilloGame
             // Set playerColour to 0
             playerColour = 0;
 
-            MessageBox.Show($"Game Loading: {player1Name} with {blackCounters} counters, {player2Name} with {whiteCounters} counters");
-            ONeilloGame ONeilloGame = new ONeilloGame();
-            ONeilloGame.LoadToSavedGame(player1Name, player2Name, blackCounters, whiteCounters);
+            MessageBox.Show($"Game Loading:\n{player1Name} with {blackCounters} counters,\n{player2Name} with {whiteCounters} counters");
+
+            LoadGame.Invoke(player1Name, player2Name, blackCounters, whiteCounters); 
+
         }
 
         public int[,] MakeBoardGame()

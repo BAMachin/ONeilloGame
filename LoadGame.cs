@@ -31,7 +31,6 @@ namespace ONeilloGame
             btnLoadGame.Click += btnLoadGame_Click;
 
         }
-
        private void btnLoadGame_Click(object sender, EventArgs e)
        {
             string filePath = "C:\\ONeilloGame\\game_data.json";
@@ -79,15 +78,12 @@ namespace ONeilloGame
                             }
                             else
                             {
-                                MessageBox.Show("Please choose another game slot.");
+                               // MessageBox.Show("Please choose another game slot.");
                             }
                         }
                     }
                 }
-                else
-                {
-                    MessageBox.Show("Please choose another game slot.");
-                }
+                
                 this.Close(); 
             }
        }

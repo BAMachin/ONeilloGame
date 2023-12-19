@@ -154,7 +154,7 @@
             bottomtextBoxPlayer2.BorderStyle = BorderStyle.None;
             bottomtextBoxPlayer2.Cursor = Cursors.IBeam;
             bottomtextBoxPlayer2.Font = new Font("Calibri", 20.25F, FontStyle.Regular, GraphicsUnit.Point);
-            bottomtextBoxPlayer2.Location = new Point(551, 676);
+            bottomtextBoxPlayer2.Location = new Point(520, 678);
             bottomtextBoxPlayer2.Name = "bottomtextBoxPlayer2";
             bottomtextBoxPlayer2.PlaceholderText = "Player #2";
             bottomtextBoxPlayer2.Size = new Size(108, 33);
@@ -170,7 +170,7 @@
             bottomtextBoxPlayer1.BorderStyle = BorderStyle.None;
             bottomtextBoxPlayer1.Cursor = Cursors.IBeam;
             bottomtextBoxPlayer1.Font = new Font("Calibri", 20.25F, FontStyle.Regular, GraphicsUnit.Point);
-            bottomtextBoxPlayer1.Location = new Point(143, 676);
+            bottomtextBoxPlayer1.Location = new Point(179, 676);
             bottomtextBoxPlayer1.Name = "bottomtextBoxPlayer1";
             bottomtextBoxPlayer1.PlaceholderText = "Player #1";
             bottomtextBoxPlayer1.Size = new Size(111, 33);
@@ -182,7 +182,7 @@
             // 
             bottompictureBox2.Anchor = AnchorStyles.Bottom;
             bottompictureBox2.Image = Properties.Resources._0;
-            bottompictureBox2.Location = new Point(0, 659);
+            bottompictureBox2.Location = new Point(12, 659);
             bottompictureBox2.Name = "bottompictureBox2";
             bottompictureBox2.Size = new Size(128, 118);
             bottompictureBox2.TabIndex = 4;
@@ -192,7 +192,7 @@
             // 
             bottompictureBox3.Anchor = AnchorStyles.Bottom;
             bottompictureBox3.Image = Properties.Resources._11;
-            bottompictureBox3.Location = new Point(668, 659);
+            bottompictureBox3.Location = new Point(656, 659);
             bottompictureBox3.Name = "bottompictureBox3";
             bottompictureBox3.Size = new Size(132, 118);
             bottompictureBox3.SizeMode = PictureBoxSizeMode.StretchImage;
@@ -206,7 +206,7 @@
             bottomlabel2PlayerTwoTurn.BackColor = SystemColors.MenuHighlight;
             bottomlabel2PlayerTwoTurn.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold | FontStyle.Underline, GraphicsUnit.Point);
             bottomlabel2PlayerTwoTurn.ForeColor = Color.Navy;
-            bottomlabel2PlayerTwoTurn.Location = new Point(551, 714);
+            bottomlabel2PlayerTwoTurn.Location = new Point(520, 715);
             bottomlabel2PlayerTwoTurn.Name = "bottomlabel2PlayerTwoTurn";
             bottomlabel2PlayerTwoTurn.Size = new Size(111, 20);
             bottomlabel2PlayerTwoTurn.TabIndex = 7;
@@ -256,7 +256,7 @@
             bottomlabel1Player1Turn.BackColor = SystemColors.MenuHighlight;
             bottomlabel1Player1Turn.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold | FontStyle.Underline, GraphicsUnit.Point);
             bottomlabel1Player1Turn.ForeColor = Color.Navy;
-            bottomlabel1Player1Turn.Location = new Point(143, 714);
+            bottomlabel1Player1Turn.Location = new Point(179, 715);
             bottomlabel1Player1Turn.Name = "bottomlabel1Player1Turn";
             bottomlabel1Player1Turn.Size = new Size(111, 20);
             bottomlabel1Player1Turn.TabIndex = 11;
