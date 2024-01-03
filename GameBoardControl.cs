@@ -261,25 +261,25 @@ namespace ONeilloGame
 
         public bool CheckSurroundingTiles(int row, int col, int playerColour, int[,] gameBoardArray, List<int> tileCoordinatesToFlip)
         {
+            const int BoardSize = 100;
             bool isValidMove = false;
 
-            int[] dx = { -1, -1, -1, 0, 0, 1, 1, 1 };
-            int[] dy = { -1, 0, 1, -1, 1, -1, 0, 1 };
+            int[] directionX = { -1, -1, -1, 0, 0, 1, 1, 1 };
+            int[] directionY = { -1, 0, 1, -1, 1, -1, 0, 1 };
 
             for (int dir = 0; dir < 8; dir++)
             {
-                int x = row + dx[dir];
-                int y = col + dy[dir];
+                int x = row + directionX[dir];
+                int y = col + directionY[dir];
 
                 List<int> currentDirectionTilesToFlip = new List<int>();
 
-                while (x >= 0 && x < gameBoardArray.GetLength(0) && y >= 0 && y < gameBoardArray.GetLength(1))
+                while (IsValidCoordinate(x, y, gameBoardArray.GetLength(0), gameBoardArray.GetLength(1)))
                 {
                     int tileValue = gameBoardArray[x, y];
 
                     if (tileValue == playerColour)
                     {
-                        // Opponent's color found, and there is at least one opponent's piece in between
                         if (currentDirectionTilesToFlip.Count > 0)
                         {
                             isValidMove = true;
@@ -289,31 +289,41 @@ namespace ONeilloGame
                     }
                     else if (tileValue == 1 - playerColour) // Opponent's color
                     {
-                        currentDirectionTilesToFlip.Add(x * 100 + y);
+                        currentDirectionTilesToFlip.Add(x * BoardSize + y);
                     }
                     else if (tileValue == 0) // Empty tile
                     {
                         break;
                     }
 
-                    x += dx[dir];
-                    y += dy[dir];
+                    x += directionX[dir];
+                    y += directionY[dir];
                 }
 
-                // Check if the move is at the top or bottom row and the sandwich conditions are met
-                if ((row == 0 || row == gameBoardArray.GetLength(0) - 1) &&
-                    row + 2 * dx[dir] >= 0 && row + 2 * dx[dir] < gameBoardArray.GetLength(0) &&
-                    col + 2 * dy[dir] >= 0 && col + 2 * dy[dir] < gameBoardArray.GetLength(1) &&
-                    gameBoardArray[row + 2 * dx[dir], col + 2 * dy[dir]] == playerColour &&
-                    gameBoardArray[row + dx[dir], col + dy[dir]] == 1 - playerColour)
+                if (IsTopOrBottomRow(row, gameBoardArray.GetLength(0)) && directionX[dir] != 0 &&
+                    IsValidCoordinate(row + 2 * directionX[dir], col + 2 * directionY[dir], gameBoardArray.GetLength(0), gameBoardArray.GetLength(1)) &&
+                    gameBoardArray[row + 2 * directionX[dir], col + 2 * directionY[dir]] == playerColour &&
+                    gameBoardArray[row + directionX[dir], col + directionY[dir]] == 1 - playerColour)
                 {
                     isValidMove = true;
-                    tileCoordinatesToFlip.Add((row + dx[dir]) * 100 + col + dy[dir]); // Add the opponent's tile to flip
+                    tileCoordinatesToFlip.Add((row + directionX[dir]) * BoardSize + col + directionY[dir]);
                 }
             }
 
             return isValidMove;
         }
+
+        private bool IsValidCoordinate(int x, int y, int rows, int cols)
+        {
+            return x >= 0 && x < rows && y >= 0 && y < cols;
+        }
+
+        private bool IsTopOrBottomRow(int row, int numRows)
+        {
+            return row == 0 || row == numRows - 1;
+        }
+
+
 
 
 
